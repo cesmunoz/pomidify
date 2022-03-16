@@ -17,15 +17,10 @@ import {
 } from "@chakra-ui/react";
 import { signIn, signOut } from "next-auth/react";
 import { FiMenu, FiBell, FiChevronDown, FiUser } from "react-icons/fi";
-
-type UserProps = {
-  email: string;
-  image: string;
-  name: string;
-};
+import { UserSession } from "../types/next-auth";
 
 interface MobileProps extends FlexProps {
-  user?: UserProps;
+  user?: UserSession;
   onOpen: () => void;
 }
 
