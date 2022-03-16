@@ -1,7 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { Button } from "ui";
-import { SidebarWithHeader } from "../components/Layout";
+import { Layout } from "../components/Layout";
 
 export default function Web() {
   const { data: session } = useSession();
@@ -15,7 +14,7 @@ export default function Web() {
 
   if (session) {
     return (
-      <SidebarWithHeader>
+      <Layout>
         Hello World Signed in as {session.user.email} <br />
         <button onClick={() => signOut()}>Sign out</button>
         <button onClick={() => getUserPlaylists()}>Get all my playlists</button>
@@ -25,7 +24,7 @@ export default function Web() {
             <img src={item.images[0]?.url} width="100" />
           </div>
         ))}
-      </SidebarWithHeader>
+      </Layout>
     );
   }
 
