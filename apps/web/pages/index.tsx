@@ -4,6 +4,7 @@ import { useState } from "react";
 export default function Web() {
   const { data: session } = useSession();
   const [playlists, setPlaylists] = useState([]);
+  console.log("NEXTAUTH_URL", process.env.NEXTAUTH_URL)
 
   const getUserPlaylists = async () => {
     const res = await fetch("/api/playlists");
