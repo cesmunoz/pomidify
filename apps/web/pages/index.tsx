@@ -1,6 +1,5 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { Layout } from "../components/Layout";
 
 export default function Web() {
   const { data: session } = useSession();
@@ -14,9 +13,7 @@ export default function Web() {
 
   if (session) {
     return (
-      <Layout>
-        Hello World Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+      <>
         <button onClick={() => getUserPlaylists()}>Get all my playlists</button>
         {playlists.map((item) => (
           <div key={item.id}>
@@ -24,14 +21,13 @@ export default function Web() {
             <img src={item.images[0]?.url} width="100" />
           </div>
         ))}
-      </Layout>
+      </>
     );
   }
 
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
     </>
   );
 }
