@@ -13,8 +13,16 @@ import { POMODORO_STATUS, POMODORO_TIMER } from "../enums";
 import { format } from "../utils";
 
 export default function Pomodoro() {
-  const { pomodoroTimer, updateStatus, updateTimer } =
-    useAppContext();
+  const { pomodoroTimer, updateStatus, updateTimer } = useAppContext();
+
+  const handlePlayer = async (type: POMODORO_STATUS) => {
+    await fetch("/api/player", {
+      method: "POST",
+      body: JSON.stringify({
+        status: type,
+      }),
+    });
+  };
 
   function handleTimer(timer) {
     updateTimer(timer);
@@ -22,6 +30,7 @@ export default function Pomodoro() {
 
   function handleStatus(type: POMODORO_STATUS) {
     updateStatus(type);
+    handlePlayer(type);
 
     if (type === POMODORO_STATUS.STOPPED) {
       updateTimer(POMODORO_TIMER.POMODORO);
