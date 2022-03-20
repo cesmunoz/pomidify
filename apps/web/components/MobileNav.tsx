@@ -16,8 +16,11 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 import { FiMenu, FiBell, FiChevronDown, FiUser } from "react-icons/fi";
+import { useAppContext } from "../context/app";
 import { UserSession } from "../types/next-auth";
+import { format } from "../utils";
 
 interface MobileProps extends FlexProps {
   user?: UserSession;
@@ -25,10 +28,12 @@ interface MobileProps extends FlexProps {
 }
 
 export const MobileNav = ({ user, onOpen, ...rest }: MobileProps) => {
-
+  const { pathname } = useRouter();
+  const hidePomodoroTimer = pathname === "/pomodoro";
+  const { pomodoroTimer } = useAppContext();
   const handleLogin = () => {
     return user ? signOut() : signIn();
-  }
+  };
 
   return (
     <Flex
@@ -60,6 +65,13 @@ export const MobileNav = ({ user, onOpen, ...rest }: MobileProps) => {
       </Text>
 
       <HStack spacing={{ base: "0", md: "6" }}>
+        {!hidePomodoroTimer && (
+          <Flex>
+            <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+              {format(pomodoroTimer)}
+            </Text>
+          </Flex>
+        )}
         <IconButton
           size="lg"
           variant="ghost"
