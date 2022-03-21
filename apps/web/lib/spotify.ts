@@ -9,8 +9,9 @@ const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`;
 const PLAYLISTS_ENDPOINT = "https://api.spotify.com/v1/me/playlists";
 const PLAY_ENDPOINT = `https://api.spotify.com/v1/me/player/play`;
 const PAUSED_ENDPOINT = `https://api.spotify.com/v1/me/player/pause`;
+const TRANSFER_PLAYBACK = `https://api.spotify.com/v1/me/player`;
 
-const getAccessToken = async (refresh_token) => {
+export const getAccessToken = async (refresh_token) => {
   const response = await fetch(TOKEN_ENDPOINT, {
     method: "POST",
     headers: {
@@ -45,14 +46,32 @@ export const getUsersPlaylists = async (refresh_token) => {
   });
 };
 
-export const player = async (refresh_token, status: POMODORO_STATUS) => {
+export const player = async (
+  refresh_token,
+  status: POMODORO_STATUS,
+  deviceId: string
+) => {
   const { access_token } = await getAccessToken(refresh_token);
-  console.log('ACCESS TOKEN', access_token);
   const url =
     status === POMODORO_STATUS.RUNNING ? PLAY_ENDPOINT : PAUSED_ENDPOINT;
 
-  return fetch(url, {
+  const urlPlayer = `${url}?device_id=${deviceId}`;
+  return fetch(urlPlayer, {
     method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
+
+export const playerTransfer = async (refresh_token, deviceId: string) => {
+  const { access_token } = await getAccessToken(refresh_token);
+
+  return fetch(TRANSFER_PLAYBACK, {
+    method: "PUT",
+    body: JSON.stringify({
+      device_ids: [deviceId],
+    }),
     headers: {
       Authorization: `Bearer ${access_token}`,
     },

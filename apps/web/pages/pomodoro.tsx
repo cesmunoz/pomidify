@@ -13,15 +13,17 @@ import { POMODORO_STATUS, POMODORO_TIMER } from "../enums";
 import { format } from "../utils";
 
 export default function Pomodoro() {
-  const { pomodoroTimer, updateStatus, updateTimer } = useAppContext();
+  const { pomodoroTimer, updateStatus, updateTimer, spotifyPlayer,spotifyDeviceId } = useAppContext();
 
   const handlePlayer = async (type: POMODORO_STATUS) => {
-    await fetch("/api/player", {
-      method: "POST",
-      body: JSON.stringify({
-        status: type,
-      }),
-    });
+    // await fetch("/api/player", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     status: type,
+    //     deviceId: spotifyDeviceId
+    //   }),
+    // });
+    spotifyPlayer.togglePlay();
   };
 
   function handleTimer(timer) {

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   Box,
   useColorModeValue,
@@ -12,10 +12,30 @@ import { useSession } from "next-auth/react";
 import { useAppContext } from "../context/app";
 import { POMODORO_STATUS, POMODORO_TIMER } from "../enums";
 
+// TODO should be on types folder
+declare global {
+  interface Window {
+    onSpotifyWebPlaybackSDKReady: Function;
+    Spotify: any;
+  }
+}
+
 export function Layout({ children }: { children: ReactNode }) {
   const { data: session } = useSession();
-  const { pomodoroTimer, pomodoroStatus, updateStatus, updateTimer } =
-    useAppContext();
+  const {
+    pomodoroTimer,
+    pomodoroStatus,
+    spotifyToken,
+    spotifyPlayer,
+    spotifyDeviceId,
+    updateStatus,
+    updateTimer,
+    setSpotifyPlayer,
+    setSpotifyToken,
+    setSpotifyDeviceId,
+  } = useAppContext();
+
+  // TODO check to stop the music globally
 
   useEffect(() => {
     if (pomodoroTimer <= 0) {
@@ -30,7 +50,73 @@ export function Layout({ children }: { children: ReactNode }) {
       }, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [pomodoroStatus, pomodoroTimer, updateStatus, updateTimer]);
+  }, [pomodoroStatus, pomodoroTimer, spotifyPlayer, updateStatus, updateTimer]);
+
+  useEffect(() => {
+    async function getToken() {
+      const response = await fetch("/api/spotify");
+      const json = await response.json();
+      setSpotifyToken(json.access_token);
+    }
+
+    getToken();
+  }, [setSpotifyToken]);
+
+  useEffect(() => {
+    async function setTransferPlayer() {
+      if (spotifyDeviceId) {
+        await fetch("/api/player-transfer", {
+          method: "POST",
+          body: JSON.stringify({
+            deviceId: spotifyDeviceId,
+          }),
+        });
+      }
+    }
+    setTransferPlayer();
+  }, [spotifyDeviceId]);
+
+  useEffect(() => {
+    if (spotifyToken) {
+      const script = document.createElement("script");
+      script.src = "https://sdk.scdn.co/spotify-player.js";
+      script.async = true;
+
+      document.body.appendChild(script);
+
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        const player = new window.Spotify.Player({
+          name: "Web Playback SDK",
+          getOAuthToken: (cb) => {
+            cb(spotifyToken);
+          },
+          volume: 1,
+        });
+
+        setSpotifyPlayer(player);
+
+        player.addListener("ready", ({ device_id }) => {
+          console.log("Ready with Device ID", device_id);
+          setSpotifyDeviceId(device_id);
+        });
+
+        player.addListener("not_ready", ({ device_id }) => {
+          console.log("Device ID has gone offline", device_id);
+        });
+
+        player.addListener("player_state_changed", (state) => {
+          if (!state) {
+            return;
+          }
+
+          player.getCurrentState().then((state) => {
+            // !state ? setActive(false) : setActive(true);
+          });
+        });
+        player.connect();
+      };
+    }
+  }, [setSpotifyDeviceId, setSpotifyPlayer, spotifyToken]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
