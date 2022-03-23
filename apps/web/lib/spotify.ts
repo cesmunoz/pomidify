@@ -1,4 +1,4 @@
-import { POMODORO_STATUS } from "../enums";
+import { POMODORO_STATUS, SPOTIFY_PLAYER_STATE } from "../enums";
 
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -10,6 +10,8 @@ const PLAYLISTS_ENDPOINT = "https://api.spotify.com/v1/me/playlists";
 const PLAY_ENDPOINT = `https://api.spotify.com/v1/me/player/play`;
 const PAUSED_ENDPOINT = `https://api.spotify.com/v1/me/player/pause`;
 const TRANSFER_PLAYBACK = `https://api.spotify.com/v1/me/player`;
+const REPEAT_ENDPOINT = "https://api.spotify.com/v1/me/player/repeat"
+const SHUFFLE_ENDPOINT = "https://api.spotify.com/v1/me/player/shuffle"
 
 export const getAccessToken = async (refresh_token) => {
   const response = await fetch(TOKEN_ENDPOINT, {
@@ -77,3 +79,25 @@ export const playerTransfer = async (refresh_token, deviceId: string) => {
     },
   });
 };
+
+export const playerState = async (
+  refresh_token,
+  deviceId: string,
+  type: SPOTIFY_PLAYER_STATE,
+  value: any
+) => {
+  const { access_token } = await getAccessToken(refresh_token);
+  const url =
+    type === SPOTIFY_PLAYER_STATE.REPEAT ? REPEAT_ENDPOINT : `${SHUFFLE_ENDPOINT}?state=${value}`;
+
+  const urlPlayer = `${url}&device_id=${deviceId}`;
+  return fetch(urlPlayer, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
+
+
+

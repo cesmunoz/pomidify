@@ -7,7 +7,16 @@ enum ACTION_TYPES {
   SET_SPOTIFY_PLAYER = "SET_SPOTIFY_PLAYER",
   SET_SPOTIFY_TOKEN = "SET_SPOTIFY_TOKEN",
   SET_SPOTIFY_DEVICE_ID = "SET_SPOTIFY_DEVICE_ID",
+  SET_SPOTIFY_PLAYER_STATE = "SET_SPOTIFY_PLAYER_STATE",
+  SET_PROGRESS_SONG = "SET_PROGRESS_SONG",
 }
+
+type SpotifyPlayerState = {
+  duration: number;
+  position: number;
+  currentTrack: any; // TODO: Define currentTrack Type
+  nextTracks: any; // TODO: Define nextTracks type
+};
 
 type AppContext = {
   pomodoroTimer: number;
@@ -15,16 +24,21 @@ type AppContext = {
   spotifyPlayer?: any;
   spotifyToken?: string;
   spotifyDeviceId?: string;
+  spotifyPlayerState?: SpotifyPlayerState;
+  progressSong: number;
   updateStatus?: Function;
   updateTimer?: Function;
   setSpotifyPlayer?: Function;
   setSpotifyToken?: Function;
   setSpotifyDeviceId?: Function;
+  updateSpotifyPlayerState?: Function;
+  setProgressSong?: Function;
 };
 
 const initialState: AppContext = {
   pomodoroStatus: POMODORO_STATUS.STOPPED,
   pomodoroTimer: POMODORO_TIMER.POMODORO,
+  progressSong: 0,
 };
 
 export const AppContext = createContext<AppContext | null>(null);
@@ -57,6 +71,16 @@ function AppReducer(state, action) {
       return {
         ...state,
         spotifyDeviceId: payload,
+      };
+    case ACTION_TYPES.SET_SPOTIFY_PLAYER_STATE:
+      return {
+        ...state,
+        spotifyPlayerState: payload,
+      };
+    case ACTION_TYPES.SET_PROGRESS_SONG:
+      return {
+        ...state,
+        progressSong: payload,
       };
     default:
       throw new Error(`Action ${type} not implemented`);
@@ -102,6 +126,18 @@ export function AppProvider(props) {
       payload: deviceId,
     });
 
+  const updateSpotifyPlayerState = (payload: SpotifyPlayerState) =>
+    dispatch({
+      type: ACTION_TYPES.SET_SPOTIFY_PLAYER_STATE,
+      payload,
+    });
+
+  const setProgressSong = (payload: number) =>
+    dispatch({
+      type: ACTION_TYPES.SET_PROGRESS_SONG,
+      payload,
+    });
+
   const [state, dispatch] = useReducer(AppReducer, {
     ...initialState,
     updateStatus,
@@ -109,6 +145,8 @@ export function AppProvider(props) {
     setSpotifyPlayer,
     setSpotifyToken,
     setSpotifyDeviceId,
+    updateSpotifyPlayerState,
+    setProgressSong,
   });
   return <AppContext.Provider value={state} {...props} />;
 }

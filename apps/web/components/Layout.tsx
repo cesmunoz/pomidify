@@ -28,29 +28,44 @@ export function Layout({ children }: { children: ReactNode }) {
     spotifyToken,
     spotifyPlayer,
     spotifyDeviceId,
+    spotifyPlayerState,
+    progressSong,
     updateStatus,
     updateTimer,
     setSpotifyPlayer,
     setSpotifyToken,
     setSpotifyDeviceId,
+    updateSpotifyPlayerState,
+    setProgressSong,
   } = useAppContext();
 
   // TODO check to stop the music globally
+  const [currentSongId, setCurrentSongId] = useState<string>("");
 
   useEffect(() => {
     if (pomodoroTimer <= 0) {
       updateStatus(POMODORO_STATUS.STOPPED);
       updateTimer(POMODORO_TIMER.POMODORO);
+      spotifyPlayer.pause();
       return;
     }
 
     if (pomodoroStatus === POMODORO_STATUS.RUNNING && pomodoroTimer >= 1) {
       const intervalId = setInterval(() => {
         updateTimer(pomodoroTimer - 1);
+        if (
+          spotifyPlayerState &&
+          currentSongId !== spotifyPlayerState.currentTrack.id
+        ) {
+          setCurrentSongId(spotifyPlayerState.currentTrack.id);
+          setProgressSong(0);
+          return;
+        }
+        setProgressSong(progressSong + 1000);
       }, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [pomodoroStatus, pomodoroTimer, spotifyPlayer, updateStatus, updateTimer]);
+  }, [currentSongId, pomodoroStatus, pomodoroTimer, progressSong, setProgressSong, spotifyPlayer, spotifyPlayerState, updateStatus, updateTimer]);
 
   useEffect(() => {
     async function getToken() {
@@ -86,11 +101,11 @@ export function Layout({ children }: { children: ReactNode }) {
 
       window.onSpotifyWebPlaybackSDKReady = () => {
         const player = new window.Spotify.Player({
-          name: "Web Playback SDK",
+          name: "Pomidify",
           getOAuthToken: (cb) => {
             cb(spotifyToken);
           },
-          volume: 1,
+          volume: 0.5,
         });
 
         setSpotifyPlayer(player);
@@ -109,9 +124,16 @@ export function Layout({ children }: { children: ReactNode }) {
             return;
           }
 
-          player.getCurrentState().then((state) => {
-            // !state ? setActive(false) : setActive(true);
+          const { duration, position, track_window } = state;
+          updateSpotifyPlayerState({
+            duration,
+            position,
+            currentTrack: track_window.current_track,
+            nextTracks: track_window.next_tracks,
           });
+          // player.getCurrentState().then((state) => {
+          //   // !state ? setActive(false) : setActive(true);
+          // });
         });
         player.connect();
       };
