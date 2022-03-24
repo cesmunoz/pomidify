@@ -1,12 +1,14 @@
-import { player } from "../../lib/spotify";
+import { playerResumePause } from "../../lib/spotify";
 import { getSession } from "next-auth/react";
 
 const handler = async (req, res) => {
   try {
     const { body } = req;
-    const { status, deviceId } = JSON.parse(body);
+    const { status, deviceId, uri } = JSON.parse(body);
+    console.log('URI', uri)
     const { accessToken } = await getSession({ req });
-    await player(accessToken, status, deviceId);
+    const response = await playerResumePause(accessToken, status, deviceId, uri);
+    console.log('RESPONSE', response);
 
     return res.status(200).json();
   } catch (err) {

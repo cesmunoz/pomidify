@@ -10,8 +10,8 @@ const PLAYLISTS_ENDPOINT = "https://api.spotify.com/v1/me/playlists";
 const PLAY_ENDPOINT = `https://api.spotify.com/v1/me/player/play`;
 const PAUSED_ENDPOINT = `https://api.spotify.com/v1/me/player/pause`;
 const TRANSFER_PLAYBACK = `https://api.spotify.com/v1/me/player`;
-const REPEAT_ENDPOINT = "https://api.spotify.com/v1/me/player/repeat"
-const SHUFFLE_ENDPOINT = "https://api.spotify.com/v1/me/player/shuffle"
+const REPEAT_ENDPOINT = "https://api.spotify.com/v1/me/player/repeat";
+const SHUFFLE_ENDPOINT = "https://api.spotify.com/v1/me/player/shuffle";
 
 export const getAccessToken = async (refresh_token) => {
   const response = await fetch(TOKEN_ENDPOINT, {
@@ -48,10 +48,11 @@ export const getUsersPlaylists = async (refresh_token) => {
   });
 };
 
-export const player = async (
+export const playerResumePause = async (
   refresh_token,
   status: POMODORO_STATUS,
-  deviceId: string
+  deviceId: string,
+  uri: string
 ) => {
   const { access_token } = await getAccessToken(refresh_token);
   const url =
@@ -63,6 +64,9 @@ export const player = async (
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
+    body: JSON.stringify({
+      context_uri: uri,
+    }),
   });
 };
 
@@ -96,7 +100,7 @@ export const playerShuffle = async (
   });
 };
 
-export const playerRepeat = async(
+export const playerRepeat = async (
   refresh_token,
   deviceId: string,
   value: PLAYER_REPEAT_STATE
@@ -110,7 +114,4 @@ export const playerRepeat = async(
       Authorization: `Bearer ${access_token}`,
     },
   });
-}
-
-
-
+};

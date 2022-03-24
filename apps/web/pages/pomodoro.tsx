@@ -39,6 +39,7 @@ export default function Pomodoro() {
     pomodoroStatus,
     pomodoroTimerSelected,
     spotifyDeviceId,
+    spotifySelectedPlaylist,
     updateStatus,
     updateSelectedTimer,
     updateTimer,
@@ -57,7 +58,15 @@ export default function Pomodoro() {
 
   const handlePlayer = async (type: POMODORO_STATUS) => {
     if (type === POMODORO_STATUS.RUNNING) {
-      spotifyPlayer.resume();
+      //spotifyPlayer.resume();
+      await fetch("/api/player-toggle", {
+        method: "POST",
+        body: JSON.stringify({
+          status: type,
+          deviceId: spotifyDeviceId,
+          uri: spotifySelectedPlaylist.uri
+        }),
+      });
       return;
     }
 
