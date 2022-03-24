@@ -58,7 +58,7 @@ export function Layout({ children }: { children: ReactNode }) {
           currentSongId !== spotifyPlayerState.currentTrack.id
         ) {
           setCurrentSongId(spotifyPlayerState.currentTrack.id);
-          setProgressSong(0);
+          setProgressSong(spotifyPlayerState.position);
           return;
         }
         setProgressSong(progressSong + 1000);

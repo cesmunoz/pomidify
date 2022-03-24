@@ -9,3 +9,10 @@ export const format = (time: number) => {
   const secondsFormatted = formatTime(seconds);
   return `${minutesFormatted}:${secondsFormatted}`;
 };
+
+export const formatProgressSong = (time:number, remaining = false) => {
+  var minutes = Math.floor(time / 60000);
+  var seconds = ((time % 60000) / 1000).toFixed(0);
+  const result = `${minutes}:${(Number(seconds) < 10 ? '0' : '')}${seconds}`;
+  return remaining ? `-${result}`: result;
+};

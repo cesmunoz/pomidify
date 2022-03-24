@@ -15,6 +15,7 @@ enum ACTION_TYPES {
   SET_PROGRESS_SONG = "SET_PROGRESS_SONG",
   SET_PLAYER_SHUFFLE = "SET_PLAYER_SHUFFLE",
   SET_PLAYER_REPEAT = "SET_PLAYER_REPEAT",
+  POMODORO_TIMER_SELECTED = "POMODORO_TIMER_SELECTED"
 }
 
 type SpotifyPlayerState = {
@@ -26,6 +27,7 @@ type SpotifyPlayerState = {
 
 type AppContext = {
   pomodoroTimer: number;
+  pomodoroTimerSelected: POMODORO_TIMER;
   pomodoroStatus: POMODORO_STATUS;
   spotifyPlayer?: any;
   spotifyToken?: string;
@@ -36,6 +38,7 @@ type AppContext = {
   playerRepeat: PLAYER_REPEAT_STATE,
   updateStatus?: Function;
   updateTimer?: Function;
+  updateSelectedTimer?: Function;
   setSpotifyPlayer?: Function;
   setSpotifyToken?: Function;
   setSpotifyDeviceId?: Function;
@@ -48,6 +51,7 @@ type AppContext = {
 const initialState: AppContext = {
   pomodoroStatus: POMODORO_STATUS.STOPPED,
   pomodoroTimer: POMODORO_TIMER.POMODORO,
+  pomodoroTimerSelected: POMODORO_TIMER.POMODORO,
   progressSong: 0,
   playerShuffle: false,
   playerRepeat: PLAYER_REPEAT_STATE.OFF,
@@ -104,6 +108,11 @@ function AppReducer(state, action) {
         ...state,
         playerRepeat: payload,
       };
+    case ACTION_TYPES.POMODORO_TIMER_SELECTED: 
+      return {
+        ...state,
+        pomodoroTimerSelected: payload
+      }
     default:
       throw new Error(`Action ${type} not implemented`);
   }
@@ -172,10 +181,17 @@ export function AppProvider(props) {
       payload,
     });
 
+  const updateSelectedTimer = (payload: POMODORO_TIMER) => 
+  dispatch({
+    type: ACTION_TYPES.POMODORO_TIMER_SELECTED,
+    payload,
+  })
+
   const [state, dispatch] = useReducer(AppReducer, {
     ...initialState,
     updateStatus,
     updateTimer,
+    updateSelectedTimer,
     setSpotifyPlayer,
     setSpotifyToken,
     setSpotifyDeviceId,
