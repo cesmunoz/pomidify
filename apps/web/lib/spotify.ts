@@ -1,4 +1,4 @@
-import { POMODORO_STATUS, SPOTIFY_PLAYER_STATE } from "../enums";
+import { POMODORO_STATUS, PLAYER_REPEAT_STATE } from "../enums";
 
 const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -80,24 +80,37 @@ export const playerTransfer = async (refresh_token, deviceId: string) => {
   });
 };
 
-export const playerState = async (
+export const playerShuffle = async (
   refresh_token,
   deviceId: string,
-  type: SPOTIFY_PLAYER_STATE,
   value: any
 ) => {
   const { access_token } = await getAccessToken(refresh_token);
-  const url =
-    type === SPOTIFY_PLAYER_STATE.REPEAT ? REPEAT_ENDPOINT : `${SHUFFLE_ENDPOINT}?state=${value}`;
+  const url = `${SHUFFLE_ENDPOINT}?state=${value}&device_id=${deviceId}`;
 
-  const urlPlayer = `${url}&device_id=${deviceId}`;
-  return fetch(urlPlayer, {
+  return fetch(url, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
   });
 };
+
+export const playerRepeat = async(
+  refresh_token,
+  deviceId: string,
+  value: PLAYER_REPEAT_STATE
+) => {
+  const { access_token } = await getAccessToken(refresh_token);
+  const url = `${REPEAT_ENDPOINT}?state=${value}&device_id=${deviceId}`;
+
+  return fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+}
 
 
 

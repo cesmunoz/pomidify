@@ -21,7 +21,7 @@ import {
   FiStopCircle,
 } from "react-icons/fi";
 import { useAppContext } from "../context/app";
-import { POMODORO_STATUS, POMODORO_TIMER, SPOTIFY_PLAYER_STATE } from "../enums";
+import { POMODORO_STATUS, POMODORO_TIMER, PLAYER_REPEAT_STATE } from "../enums";
 import { format } from "../utils";
 
 export default function Pomodoro() {
@@ -32,20 +32,23 @@ export default function Pomodoro() {
     updateTimer,
     spotifyPlayer,
     spotifyPlayerState,
-    progressSong
+    progressSong,
+    setPlayerShuffle,
+    playerShuffle,
+    setPlayerRepeat,
+    playerRepeat,
   } = useAppContext();
-
-  const [shuffleState, setShuffleState] = useState(false);
 
   const progressPercentage = spotifyPlayerState ? 
     progressSong * 100 / spotifyPlayerState.duration : 0;
 
   const handlePlayer = async (type: POMODORO_STATUS) => {
-    if(type === POMODORO_STATUS.STOPPED) {
-      spotifyPlayer.pause();
+    if(type === POMODORO_STATUS.RUNNING) {
+      spotifyPlayer.resume();
+      return;
     }
 
-    spotifyPlayer.togglePlay();
+    spotifyPlayer.pause();
   };
 
   function handleTimer(timer) {
@@ -64,24 +67,34 @@ export default function Pomodoro() {
   const handleSkipBack = () => spotifyPlayer.previousTrack();
   const handleSkipForward = () => spotifyPlayer.nextTrack();
 
-  const handleRepeat = async(type: SPOTIFY_PLAYER_STATE) => {
-    await fetch("/api/player-state", {
+  const handleRepeat = async() => {
+    let nextPlayerRepeatValue = PLAYER_REPEAT_STATE.OFF;
+
+    if(playerRepeat === PLAYER_REPEAT_STATE.OFF) {
+      nextPlayerRepeatValue = PLAYER_REPEAT_STATE.CONTEXT;
+    }
+
+    if(playerRepeat === PLAYER_REPEAT_STATE.CONTEXT) {
+      nextPlayerRepeatValue = PLAYER_REPEAT_STATE.TRACK;
+    }
+
+    setPlayerRepeat(nextPlayerRepeatValue);
+    await fetch("/api/player-repeat", {
       method: "POST",
       body: JSON.stringify({
         deviceId: spotifyDeviceId,
-        type
+        value: nextPlayerRepeatValue
       }),
     });
   }
 
   const handleShuffle = async() => {
-    setShuffleState(value => !value);
-    await fetch("/api/player-state", {
+    setPlayerShuffle(!playerShuffle);
+    await fetch("/api/player-shuffle", {
       method: "POST",
       body: JSON.stringify({
         deviceId: spotifyDeviceId,
-        type: SPOTIFY_PLAYER_STATE.SHUFFLE,
-        value: shuffleState
+        value: !playerShuffle,
       }),
     });
   }

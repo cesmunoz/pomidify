@@ -12,7 +12,8 @@ export enum POMODORO_TIMER {
   LONG_BREAK = minutesToSeconds(15), // 15
 }
 
-export enum SPOTIFY_PLAYER_STATE {
-  SHUFFLE,
-  REPEAT
+export enum PLAYER_REPEAT_STATE {
+  TRACK = "track",
+  CONTEXT = "context",
+  OFF = "off",
 }

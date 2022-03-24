@@ -1,5 +1,9 @@
 import { createContext, useContext, useReducer } from "react";
-import { POMODORO_STATUS, POMODORO_TIMER } from "../../enums";
+import {
+  PLAYER_REPEAT_STATE,
+  POMODORO_STATUS,
+  POMODORO_TIMER,
+} from "../../enums";
 
 enum ACTION_TYPES {
   CHANGE_POMODORO_STATUS = "CHANGE_POMODORO_STATUS",
@@ -9,6 +13,8 @@ enum ACTION_TYPES {
   SET_SPOTIFY_DEVICE_ID = "SET_SPOTIFY_DEVICE_ID",
   SET_SPOTIFY_PLAYER_STATE = "SET_SPOTIFY_PLAYER_STATE",
   SET_PROGRESS_SONG = "SET_PROGRESS_SONG",
+  SET_PLAYER_SHUFFLE = "SET_PLAYER_SHUFFLE",
+  SET_PLAYER_REPEAT = "SET_PLAYER_REPEAT",
 }
 
 type SpotifyPlayerState = {
@@ -26,6 +32,8 @@ type AppContext = {
   spotifyDeviceId?: string;
   spotifyPlayerState?: SpotifyPlayerState;
   progressSong: number;
+  playerShuffle: boolean;
+  playerRepeat: PLAYER_REPEAT_STATE,
   updateStatus?: Function;
   updateTimer?: Function;
   setSpotifyPlayer?: Function;
@@ -33,12 +41,16 @@ type AppContext = {
   setSpotifyDeviceId?: Function;
   updateSpotifyPlayerState?: Function;
   setProgressSong?: Function;
+  setPlayerShuffle?: Function;
+  setPlayerRepeat?: Function;
 };
 
 const initialState: AppContext = {
   pomodoroStatus: POMODORO_STATUS.STOPPED,
   pomodoroTimer: POMODORO_TIMER.POMODORO,
   progressSong: 0,
+  playerShuffle: false,
+  playerRepeat: PLAYER_REPEAT_STATE.OFF,
 };
 
 export const AppContext = createContext<AppContext | null>(null);
@@ -81,6 +93,16 @@ function AppReducer(state, action) {
       return {
         ...state,
         progressSong: payload,
+      };
+    case ACTION_TYPES.SET_PLAYER_SHUFFLE:
+      return {
+        ...state,
+        playerShuffle: payload,
+      };
+    case ACTION_TYPES.SET_PLAYER_REPEAT:
+      return {
+        ...state,
+        playerRepeat: payload,
       };
     default:
       throw new Error(`Action ${type} not implemented`);
@@ -138,6 +160,18 @@ export function AppProvider(props) {
       payload,
     });
 
+  const setPlayerShuffle = (payload: boolean) =>
+    dispatch({
+      type: ACTION_TYPES.SET_PLAYER_SHUFFLE,
+      payload,
+    });
+
+  const setPlayerRepeat = (payload: boolean) =>
+    dispatch({
+      type: ACTION_TYPES.SET_PLAYER_REPEAT,
+      payload,
+    });
+
   const [state, dispatch] = useReducer(AppReducer, {
     ...initialState,
     updateStatus,
@@ -147,6 +181,8 @@ export function AppProvider(props) {
     setSpotifyDeviceId,
     updateSpotifyPlayerState,
     setProgressSong,
+    setPlayerShuffle,
+    setPlayerRepeat,
   });
   return <AppContext.Provider value={state} {...props} />;
 }

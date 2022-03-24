@@ -65,7 +65,17 @@ export function Layout({ children }: { children: ReactNode }) {
       }, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [currentSongId, pomodoroStatus, pomodoroTimer, progressSong, setProgressSong, spotifyPlayer, spotifyPlayerState, updateStatus, updateTimer]);
+  }, [
+    currentSongId,
+    pomodoroStatus,
+    pomodoroTimer,
+    progressSong,
+    setProgressSong,
+    spotifyPlayer,
+    spotifyPlayerState,
+    updateStatus,
+    updateTimer,
+  ]);
 
   useEffect(() => {
     async function getToken() {
@@ -86,10 +96,11 @@ export function Layout({ children }: { children: ReactNode }) {
             deviceId: spotifyDeviceId,
           }),
         });
+        spotifyPlayer.pause();
       }
     }
     setTransferPlayer();
-  }, [spotifyDeviceId]);
+  }, [spotifyDeviceId, spotifyPlayer]);
 
   useEffect(() => {
     if (spotifyToken) {
@@ -131,14 +142,16 @@ export function Layout({ children }: { children: ReactNode }) {
             currentTrack: track_window.current_track,
             nextTracks: track_window.next_tracks,
           });
-          // player.getCurrentState().then((state) => {
-          //   // !state ? setActive(false) : setActive(true);
-          // });
         });
         player.connect();
       };
     }
-  }, [setSpotifyDeviceId, setSpotifyPlayer, spotifyToken]);
+  }, [
+    setSpotifyDeviceId,
+    setSpotifyPlayer,
+    spotifyToken,
+    updateSpotifyPlayerState,
+  ]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
