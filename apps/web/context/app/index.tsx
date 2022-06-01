@@ -17,6 +17,7 @@ enum ACTION_TYPES {
   SET_PLAYER_REPEAT = "SET_PLAYER_REPEAT",
   POMODORO_TIMER_SELECTED = "POMODORO_TIMER_SELECTED",
   SPOTIFY_SELECTED_PLAYLIST = "SPOTIFY_SELECTED_PLAYLIST",
+  SET_ADD_TODO_ITEM = "SET_ADD_TODO_ITEM",
 }
 
 type SpotifyPlayerState = {
@@ -29,7 +30,15 @@ type SpotifyPlayerState = {
 type SpotifyPlaylist = {
   uri: string;
   id: string;
-}
+};
+
+type TodoItem = {
+  id: string;
+  order: number;
+  name: string;
+  description?: string;
+  completed: boolean;
+};
 
 type AppContext = {
   pomodoroTimer: number;
@@ -43,6 +52,7 @@ type AppContext = {
   progressSong: number;
   playerShuffle: boolean;
   playerRepeat: PLAYER_REPEAT_STATE;
+  todoList: Array<TodoItem>;
   updateStatus?: Function;
   updateTimer?: Function;
   updateSelectedTimer?: Function;
@@ -50,11 +60,12 @@ type AppContext = {
   setSpotifyToken?: Function;
   setSpotifyDeviceId?: Function;
   setSpotifyPlaylist?: Function;
-  setPlaylistSelected?: Function
+  setPlaylistSelected?: Function;
   updateSpotifyPlayerState?: Function;
   setProgressSong?: Function;
   setPlayerShuffle?: Function;
   setPlayerRepeat?: Function;
+  setAddTodoItem?: Function;
 };
 
 const initialState: AppContext = {
@@ -64,6 +75,22 @@ const initialState: AppContext = {
   progressSong: 0,
   playerShuffle: false,
   playerRepeat: PLAYER_REPEAT_STATE.OFF,
+  todoList: [
+    {
+      id: "1",
+      completed: false,
+      name: "TASK A",
+      order: 0,
+      description: "This is a description for Task A"
+    },
+    {
+      id: "2",
+      completed: false,
+      name: "TASK B",
+      order: 1,
+      description: "This is a description for Task B"
+    }
+  ],
 };
 
 export const AppContext = createContext<AppContext | null>(null);
@@ -126,6 +153,11 @@ function AppReducer(state, action) {
       return {
         ...state,
         spotifySelectedPlaylist: payload,
+      };
+    case ACTION_TYPES.SET_ADD_TODO_ITEM:
+      return {
+        ...state,
+        todoList: [...state.todoList, payload],
       };
     default:
       throw new Error(`Action ${type} not implemented`);
@@ -207,6 +239,12 @@ export function AppProvider(props) {
       payload,
     });
 
+  const setAddTodoItem = (payload: TodoItem) =>
+    dispatch({
+      type: ACTION_TYPES.SET_ADD_TODO_ITEM,
+      payload,
+    });
+
   const [state, dispatch] = useReducer(AppReducer, {
     ...initialState,
     updateStatus,
@@ -220,6 +258,7 @@ export function AppProvider(props) {
     setPlayerShuffle,
     setPlayerRepeat,
     setSpotifyPlaylist,
+    setAddTodoItem
   });
   return <AppContext.Provider value={state} {...props} />;
 }

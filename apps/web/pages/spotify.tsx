@@ -25,7 +25,6 @@ export default function Spotify() {
   }, []);
 
   const handleClick = (item: any) => {
-    console.log('ITEM', item);
     const { id, uri } = item;
     setSpotifyPlaylist({
       id,

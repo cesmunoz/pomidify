@@ -5,11 +5,8 @@ const handler = async (req, res) => {
   try {
     const { body } = req;
     const { status, deviceId, uri } = JSON.parse(body);
-    console.log('URI', uri)
     const { accessToken } = await getSession({ req });
-    const response = await playerResumePause(accessToken, status, deviceId, uri);
-    console.log('RESPONSE', response);
-
+    await playerResumePause(accessToken, status, deviceId, uri);
     return res.status(200).json();
   } catch (err) {
     console.log(err);

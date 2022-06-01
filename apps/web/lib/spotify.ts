@@ -4,14 +4,16 @@ const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
+
+const BASE_URL = "https://api.spotify.com/v1/me"
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`;
-const PLAYLISTS_ENDPOINT = "https://api.spotify.com/v1/me/playlists";
-const PLAY_ENDPOINT = `https://api.spotify.com/v1/me/player/play`;
-const PAUSED_ENDPOINT = `https://api.spotify.com/v1/me/player/pause`;
-const TRANSFER_PLAYBACK = `https://api.spotify.com/v1/me/player`;
-const REPEAT_ENDPOINT = "https://api.spotify.com/v1/me/player/repeat";
-const SHUFFLE_ENDPOINT = "https://api.spotify.com/v1/me/player/shuffle";
+const TOP_TRACKS_ENDPOINT = `${BASE_URL}/top/tracks`;
+const PLAYLISTS_ENDPOINT = `${BASE_URL}/playlists`;
+const PLAY_ENDPOINT = `${BASE_URL}/player/play`;
+const PAUSED_ENDPOINT = `${BASE_URL}/player/pause`;
+const TRANSFER_PLAYBACK = `${BASE_URL}/player`;
+const REPEAT_ENDPOINT = `${BASE_URL}/player/repeat`;
+const SHUFFLE_ENDPOINT = `${BASE_URL}/player/shuffle`;
 
 export const getAccessToken = async (refresh_token) => {
   const response = await fetch(TOKEN_ENDPOINT, {

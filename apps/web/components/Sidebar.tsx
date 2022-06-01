@@ -9,6 +9,7 @@ import {
 import { IconType } from "react-icons";
 import {
   FiCompass,
+  FiFileText,
   FiHome,
   FiSettings,
   FiStar,
@@ -28,6 +29,7 @@ interface LinkItemProps {
 
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, href: "/" },
+  { name: "TodoList", icon: FiFileText, href: "/todo" },
   { name: "Pomodoro", icon: FiTrendingUp, href: "/pomodoro" },
   { name: "Spotify", icon: FiCompass,  href: "/spotify" },
   { name: "Favourites", icon: FiStar,  href: "/favourites"},

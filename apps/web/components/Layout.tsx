@@ -122,7 +122,6 @@ export function Layout({ children }: { children: ReactNode }) {
         setSpotifyPlayer(player);
 
         player.addListener("ready", ({ device_id }) => {
-          console.log("Ready with Device ID", device_id);
           setSpotifyDeviceId(device_id);
         });
 
