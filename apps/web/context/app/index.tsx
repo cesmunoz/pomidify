@@ -18,6 +18,8 @@ enum ACTION_TYPES {
   POMODORO_TIMER_SELECTED = "POMODORO_TIMER_SELECTED",
   SPOTIFY_SELECTED_PLAYLIST = "SPOTIFY_SELECTED_PLAYLIST",
   SET_ADD_TODO_ITEM = "SET_ADD_TODO_ITEM",
+  GET_TODO_LIST = "GET_TODO_LIST",
+  SET_TODO_ITEM_COMPLETED = "SET_TODO_ITEM_COMPLETED",
 }
 
 type SpotifyPlayerState = {
@@ -66,6 +68,8 @@ type AppContext = {
   setPlayerShuffle?: Function;
   setPlayerRepeat?: Function;
   setAddTodoItem?: Function;
+  getTodoList?: Function;
+  setTodoItemCompleted?: Function;
 };
 
 const initialState: AppContext = {
@@ -75,22 +79,7 @@ const initialState: AppContext = {
   progressSong: 0,
   playerShuffle: false,
   playerRepeat: PLAYER_REPEAT_STATE.OFF,
-  todoList: [
-    {
-      id: "1",
-      completed: false,
-      name: "TASK A",
-      order: 0,
-      description: "This is a description for Task A"
-    },
-    {
-      id: "2",
-      completed: false,
-      name: "TASK B",
-      order: 1,
-      description: "This is a description for Task B"
-    }
-  ],
+  todoList: [],
 };
 
 export const AppContext = createContext<AppContext | null>(null);
@@ -158,6 +147,19 @@ function AppReducer(state, action) {
       return {
         ...state,
         todoList: [...state.todoList, payload],
+      };
+    case ACTION_TYPES.SET_TODO_ITEM_COMPLETED:
+      return {
+        ...state,
+        todoList: state.todoList.map((item) => {
+          if (item.id === payload) {
+            return {
+              ...item,
+              status: "completed",
+            };
+          }
+          return item;
+        }),
       };
     default:
       throw new Error(`Action ${type} not implemented`);
@@ -245,6 +247,14 @@ export function AppProvider(props) {
       payload,
     });
 
+  const setTodoItemCompleted = (todoId: string) => {
+    console.log("todoId", todoId);
+    return dispatch({
+      type: ACTION_TYPES.SET_TODO_ITEM_COMPLETED,
+      todoId,
+    });
+  };
+
   const [state, dispatch] = useReducer(AppReducer, {
     ...initialState,
     updateStatus,
@@ -258,7 +268,8 @@ export function AppProvider(props) {
     setPlayerShuffle,
     setPlayerRepeat,
     setSpotifyPlaylist,
-    setAddTodoItem
+    setAddTodoItem,
+    setTodoItemCompleted,
   });
   return <AppContext.Provider value={state} {...props} />;
 }

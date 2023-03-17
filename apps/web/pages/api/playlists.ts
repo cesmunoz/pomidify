@@ -3,7 +3,8 @@ import { getSession } from "next-auth/react";
 
 const handler = async (req, res) => {
   try {
-    const { accessToken } = await getSession({ req });
+    const session: any = await getSession({ req });
+    const { accessToken } = session;
     const response = await getUsersPlaylists(accessToken);
     const { items }  = await response.json();
 

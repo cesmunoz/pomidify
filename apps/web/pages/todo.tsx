@@ -12,6 +12,7 @@ import {
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FiCheck, FiPause, FiPlay, FiTrash2 } from "react-icons/fi";
 import { v4 as uuidv4 } from "uuid";
+import { useAppContext } from "../context/app";
 
 const removeFromList = (list, index) => {
   const result = Array.from(list);
@@ -40,8 +41,15 @@ const lists = [
   },
 ];
 
-const generateLists = () =>
-  lists.reduce((acc, listKey) => ({ ...acc, [listKey.key]: [] }), {});
+const generateLists = (todoList) => {
+  return lists.reduce(
+    (acc, listKey) => ({
+      ...acc,
+      [listKey.key]: todoList.filter((item) => item.prefix === listKey.key),
+    }),
+    {}
+  );
+};
 
 const moveItem = (list, source, sourceIndex, destination, destinationIndex) => {
   const listCopy = { ...list };
@@ -80,23 +88,26 @@ const ListItem = ({
             {...provided.dragHandleProps}
             backgroundColor="pink.500"
             padding={5}
-            my={2}
-            borderRadius="lg">
+            borderRadius="lg"
+          >
             <Text textColor="white" fontSize="sm" fontWeight="bold">
-              {item.content}
+              {getShortDescription(item.title)}
             </Text>
             <Flex gap={1}>
               <IconButton
+                height={6}
                 aria-label="Run Task"
                 icon={prefix === "todo" ? <FiPlay /> : <FiPause />}
                 onClick={onToggleRun}
               />
               <IconButton
+                height={6}
                 aria-label="Complete Task"
                 icon={<FiCheck />}
                 onClick={onComplete}
               />
               <IconButton
+                height={6}
                 aria-label="Search database"
                 icon={<FiTrash2 />}
                 onClick={onRemove}
@@ -109,6 +120,14 @@ const ListItem = ({
   );
 };
 
+const getShortDescription = (name, length = 10) => {
+  if (name.length <= length) {
+    return name;
+  }
+
+  return `${name.substring(0, length)}...`;
+};
+
 const DraggableElement = ({
   prefix,
   elements,
@@ -117,38 +136,39 @@ const DraggableElement = ({
   onComplete,
   onRemove,
 }) => (
-  <Box m={10}>
-    <Text fontSize="2xl" color="pink.600">
+  <Box p={2} flexGrow={1}>
+    <Text fontSize="2xl" color="pink.600" width={125}>
       {name}
     </Text>
-    <Droppable droppableId={`${prefix}`}>
-      {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef}>
-          {elements.map((item, index) => (
-            <ListItem
-              key={item.id}
-              item={item}
-              index={index}
-              prefix={prefix}
-              onToggleRun={() => onToggleRun(item, index, prefix)}
-              onComplete={() => onComplete(item, index, prefix)}
-              onRemove={() => onRemove(item, index, prefix)}
-            />
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+    <Box w="100%" height={100} backgroundColor="pink.100">
+      <Droppable droppableId={`${prefix}`}>
+        {(provided) => (
+          <VStack {...provided.droppableProps} ref={provided.innerRef} gap={2}>
+            {elements.map((item, index) => (
+              <ListItem
+                key={item.id}
+                item={item}
+                index={index}
+                prefix={prefix}
+                onToggleRun={() => onToggleRun(item, index, prefix)}
+                onComplete={() => onComplete(item, index, prefix)}
+                onRemove={() => onRemove(item, index, prefix)}
+              />
+            ))}
+            {provided.placeholder}
+          </VStack>
+        )}
+      </Droppable>
+    </Box>
   </Box>
 );
 
 export default function Todo() {
-  const [todo, setTodo] = useState("");
-  const [elements, setElements] = React.useState(generateLists());
+  const [todoTitle, setTodoTitle] = useState("");
+  const { setAddTodoItem, todoList, setTodoItemCompleted } = useAppContext();
+  const [elements, setElements] = useState(() => generateLists(todoList));
 
-  useEffect(() => {
-    setElements(generateLists());
-  }, []);
+  console.log("elements", elements);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -167,23 +187,26 @@ export default function Todo() {
     setElements(list);
   };
 
-  const handleTaskOnChange = (e) => {
-    setTodo(e.target.value);
-  };
+  const handleTaskOnChange = (e) => setTodoTitle(e.target.value);
 
   const handleAddTodo = () => {
     const listCopy = { ...elements };
-    listCopy["todo"] = addToList(listCopy["todo"], 0, {
+    const newItem = {
       id: `item-${uuidv4()}`,
-      prefix: "todo",
-      content: todo,
-    });
+      status: "todo",
+      title: todoTitle,
+      content: "",
+    };
+    listCopy["todo"] = addToList(listCopy["todo"], 0, newItem);
     setElements(listCopy);
+    setAddTodoItem(newItem);
   };
 
-  const handleComplete = (item, index, prefix) => {
-    const list = moveItem(elements, prefix, index, "done", index);
-    setElements(list);
+  const handleComplete = (item, index, status) => {
+    // const list = moveItem(elements, status, index, "done", index);
+    // setElements(list);
+    console.log("Call completed", item);
+    setTodoItemCompleted(item.id);
   };
 
   const handleToggleTask = (item, index, prefix) => {
@@ -213,9 +236,9 @@ export default function Todo() {
           Add Task
         </Button>
       </HStack>
-      <HStack>
+      <HStack w="100%">
         <DragDropContext onDragEnd={onDragEnd}>
-          <Flex margin={5}>
+          <Flex w="100%">
             {lists.map((listKey) => (
               <DraggableElement
                 elements={elements[listKey.key]}

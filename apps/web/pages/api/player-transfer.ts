@@ -5,7 +5,8 @@ const handler = async (req, res) => {
   try {
     const { body } = req;
     const { deviceId } = JSON.parse(body);
-    const { accessToken } = await getSession({ req });
+    const session: any = await getSession({ req });
+    const { accessToken } = session;
     await playerTransfer(accessToken, deviceId);
 
     return res.status(200).json();

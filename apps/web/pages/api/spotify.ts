@@ -3,7 +3,8 @@ import { getAccessToken } from "../../lib/spotify";
 
 const handler = async (req, res) => {
   try {
-    const { accessToken: refresh_token } = await getSession({ req });
+    const session: any = await getSession({ req });
+    const { accessToken: refresh_token } = session;
     const { access_token } = await getAccessToken(refresh_token);
     return res.status(200).json({
       access_token,

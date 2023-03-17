@@ -177,6 +177,9 @@ export const TodoList = () => {
     setElements(listCopy);
   };
 
+  const handleComplete = (item, index, prefix) => {};
+  const handleRemove = (item, index, prefix) => {};
+
   return (
     <div style={{ display: "flex" }}>
       <div>
@@ -188,8 +191,8 @@ export const TodoList = () => {
                 key={listKey.key}
                 prefix={listKey.key}
                 name={listKey.name}
-                //onComplete={handleComplete}
-                //onRemove={handleRemove}
+                onComplete={handleComplete}
+                onRemove={handleRemove}
                 onToggleRun={handleToggleTask}
               />
             ))}

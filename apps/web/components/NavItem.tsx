@@ -10,7 +10,6 @@ interface NavItemProps extends FlexProps {
 }
 export const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
   return (
-    // eslint-disable-next-line @next/next/link-passhref
     <Link href={href}>
       <Flex
         align="center"
