@@ -154,7 +154,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+    <div className="container">
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -176,6 +176,6 @@ export function Layout({ children }: { children: ReactNode }) {
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
-    </Box>
+    </div>
   );
 }
