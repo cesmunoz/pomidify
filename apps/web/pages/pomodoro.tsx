@@ -6,15 +6,15 @@ import { TodoList } from "../components/TodoList";
 
 export default function PomodoroPage() {
   return (
-    <SimpleGrid columns={2} spacing={10}>
+    <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
       <Pomodoro />
-      {/* <Player /> */}
+      <Player />
       {/* <Box w="620px" h="32px"> */}
       {/* <VStack align="left"> */}
       {/* <TodoForm /> */}
       {/* <TodoList /> */}
       {/* </VStack> */}
       {/* </Box> */}
-    </SimpleGrid>
+    </div>
   );
 }

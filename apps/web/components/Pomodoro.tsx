@@ -1,17 +1,8 @@
-import {
-  Box,
-  VStack,
-  StackDivider,
-  Stack,
-  Icon,
-  Text,
-  // Button,
-} from "@chakra-ui/react";
-import { FiPause, FiPlay, FiStopCircle } from "react-icons/fi";
 import { useAppContext } from "../context/app";
 import { POMODORO_TIMER, POMODORO_STATUS } from "../enums";
 import { format } from "../utils";
-import { Button } from "ui";
+import { Button, Typography } from "ui";
+import { PlayIcon, StopIcon } from "@heroicons/react/24/solid";
 
 export const Pomodoro = () => {
   const {
@@ -58,55 +49,42 @@ export const Pomodoro = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <Stack spacing={4} direction="row" align="center">
+    <div className="flex flex-col justify-center items-center">
+      <div className="flex gap-4 items-center">
         <Button
-          colorScheme="pink"
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.POMODORO)}
-          variant={
-            pomodoroTimerSelected !== POMODORO_TIMER.POMODORO ? "ghost" : null
+          intent={
+            pomodoroTimerSelected !== POMODORO_TIMER.POMODORO && "secondary"
           }
         >
           Pomodoro
         </Button>
         <Button
-          colorScheme="pink"
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.SHORT_BREAK)}
-          variant={
-            pomodoroTimerSelected !== POMODORO_TIMER.SHORT_BREAK
-              ? "ghost"
-              : null
+          intent={
+            pomodoroTimerSelected !== POMODORO_TIMER.SHORT_BREAK && "secondary"
           }
         >
           Short Break
         </Button>
         <Button
-          colorScheme="pink"
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.LONG_BREAK)}
-          variant={
-            pomodoroTimerSelected !== POMODORO_TIMER.LONG_BREAK ? "ghost" : null
+          intent={
+            pomodoroTimerSelected !== POMODORO_TIMER.LONG_BREAK && "secondary"
           }
         >
           Long Break
         </Button>
-      </Stack>
-      <Stack spacing={4} direction="row" align="center">
-        <Text
-          fontSize="6xl"
-          fontFamily="monospace"
-          fontWeight="bold"
-          color="pink.600"
-        >
-          {format(pomodoroTimer)}
-        </Text>
-      </Stack>
-      <Stack spacing={4} direction="row" align="center">
-        <Icon
-          as={pomodoroStatus === POMODORO_STATUS.RUNNING ? FiPause : FiPlay}
-          color="pink.600"
+      </div>
+      <Typography className="font-bold text-6xl" intent="primary">
+        {format(pomodoroTimer)}
+      </Typography>
+      <div className="flex">
+        <PlayIcon
+          className="h-6 w-6 text-pink-600"
           onClick={() =>
             handleStatus(
               pomodoroStatus === POMODORO_STATUS.RUNNING
@@ -115,12 +93,8 @@ export const Pomodoro = () => {
             )
           }
         />
-        <Icon
-          as={FiStopCircle}
-          color="pink.600"
-          onClick={() => handleStatus(POMODORO_STATUS.STOPPED)}
-        />
-      </Stack>
+        <StopIcon className="h-6 w-6 text-pink-600"  onClick={() => handleStatus(POMODORO_STATUS.STOPPED)} />
+      </div>
     </div>
   );
 };

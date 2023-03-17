@@ -25,13 +25,16 @@
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "config": "workspace:*",
+    "postcss": "^8.4.21",
     "tailwind-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^4.9.5",
-    "postcss": "^8.4.21",
-    "tsup": "^6.6.3"
+    "tsup": "^6.6.3",
+    "typescript": "^4.9.5"
   },
   "dependencies": {
-    "react-icons": "^4.3.1"
+    "class-variance-authority": "^0.4.0",
+    "classnames": "^2.3.2",
+    "react-icons": "^4.3.1",
+    "tailwind-merge": "^1.10.0"
   }
 }

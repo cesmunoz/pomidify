@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Box,
   VStack,
@@ -25,6 +26,8 @@ import {
 import { PLAYER_REPEAT_STATE } from "../enums";
 import { formatProgressSong } from "../utils";
 import { useAppContext } from "../context/app";
+import { Typography } from "ui";
+import cx from "classnames";
 
 export const Player = () => {
   const {
@@ -78,93 +81,86 @@ export const Player = () => {
   };
 
   return (
-    <Box height="300px">
-      <Box w="full" borderWidth="1px" rounded="lg" shadow="lg" bg="white">
-        <VStack align="left">
-          <HStack>
-            <Box p="5">
-              <Image
-                borderRadius="md"
-                boxSize="100px"
-                src={spotifyPlayerState?.currentTrack?.album?.images[0].url}
-                alt={spotifyPlayerState?.currentTrack?.album?.name}
+    <div className="w-full">
+      <div className="w-full flex flex-col border border-gray-200 rounded-lg shadow-lg bg-white">
+        <div className="flex">
+          <div className="px-4 mt-3">
+            <img
+              className="w-14 h-14 rounded-md"
+              src={spotifyPlayerState?.currentTrack?.album?.images[0].url}
+              alt={spotifyPlayerState?.currentTrack?.album?.name}
+            />
+          </div>
+          <div className="flex flex-col pt-2 flex-1 gap-1">
+            <Typography className="text-sm font-semibold">
+              {spotifyPlayerState?.currentTrack?.name}
+              SONG
+            </Typography>
+            <Typography className="text-xs text-gray-500">
+              {spotifyPlayerState?.currentTrack?.artists[0].name}
+              ARTIST
+            </Typography>
+            <div className="flex items-center gap-2">
+              <FiShuffle
+                className={cx({
+                  "text-pink-600": playerShuffle,
+                })}
+                onClick={handleShuffle}
               />
-            </Box>
-            <VStack align="left">
-              <Text fontSize="2xl" color="gray.600">
-                {spotifyPlayerState?.currentTrack?.name}
-              </Text>
-              <Text fontSize="md" color="gray.500" pb="2">
-                {spotifyPlayerState?.currentTrack?.artists[0].name}
-              </Text>
-              <HStack>
-                <Icon
-                  as={FiShuffle}
-                  onClick={handleShuffle}
-                  color={playerShuffle ? "pink.600" : null}
-                />
-                <FiSkipBack onClick={handleSkipBack} />
-                <FiSkipForward onClick={handleSkipForward} />
-                <Icon
-                  as={FiRepeat}
-                  onClick={handleRepeat}
-                  color={
-                    playerRepeat !== PLAYER_REPEAT_STATE.OFF ? "pink.600" : null
-                  }
-                />
-                {playerRepeat === PLAYER_REPEAT_STATE.TRACK && (
-                  <Text
-                    as="sub"
-                    color="pink.600"
-                    style={{ marginLeft: "0px", marginTop: "-10px" }}
-                  >
-                    1
-                  </Text>
+              <FiSkipBack onClick={handleSkipBack} />
+              <FiSkipForward onClick={handleSkipForward} />
+              <FiRepeat
+                className={cx({
+                  "text-pink-600": playerRepeat !== PLAYER_REPEAT_STATE.OFF,
+                })}
+                onClick={handleRepeat}
+              />
+              {playerRepeat === PLAYER_REPEAT_STATE.TRACK && (
+                <Typography intent="primary" className="-ml-2 -mt-2 text-xs">
+                  1
+                </Typography>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="w-full pb-5 px-5">
+          <Slider
+            aria-label="slider-ex-2"
+            colorScheme="pink"
+            value={progressPercentage}
+            isReadOnly
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+          <Flex>
+            <Typography intent="primary" className="text-sm">
+              {formatProgressSong(progressSong)}
+            </Typography>
+            <Spacer />
+            <Typography>
+              {spotifyPlayerState &&
+                formatProgressSong(
+                  spotifyPlayerState.duration - progressSong,
+                  true
                 )}
-              </HStack>
-            </VStack>
-          </HStack>
-          <Box w="full" pb="5" px="5">
-            <Slider
-              aria-label="slider-ex-2"
-              colorScheme="pink"
-              value={progressPercentage}
-              isReadOnly
-            >
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
-            <Flex>
-              <Text color="pink.600" fontSize="sm">
-                {formatProgressSong(progressSong)}
-              </Text>
-              <Spacer />
-              <Text color="pink.600" fontSize="sm">
-                {spotifyPlayerState &&
-                  formatProgressSong(
-                    spotifyPlayerState.duration - progressSong,
-                    true
-                  )}
-              </Text>
-            </Flex>
-          </Box>
-        </VStack>
-      </Box>
-      <Box w="full" p="5">
-        <VStack align="left">
-          <Text fontSize="2xl">Next Songs:</Text>
-          <List>
-            {spotifyPlayerState?.nextTracks.map((nextTrack) => (
-              <ListItem key={nextTrack.id}>
-                <ListIcon as={FiMusic} color="pink.600" />
-                {nextTrack.name} ({nextTrack.artists[0].name})
-              </ListItem>
-            ))}
-          </List>
-        </VStack>
-      </Box>
-    </Box>
+            </Typography>
+          </Flex>
+        </div>
+      </div>
+      <div className="w-full flex flex-col mt-2">
+        <Typography className="text-lg">Next Songs:</Typography>
+        <ul>
+          {spotifyPlayerState?.nextTracks.map((nextTrack) => (
+            <ListItem key={nextTrack.id}>
+              <ListIcon as={FiMusic} color="pink.600" />
+              {nextTrack.name} ({nextTrack.artists[0].name})
+            </ListItem>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };

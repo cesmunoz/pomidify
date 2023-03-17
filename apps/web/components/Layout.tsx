@@ -173,9 +173,9 @@ export function Layout({ children }: { children: ReactNode }) {
         </DrawerContent>
       </Drawer>
       <MobileNav onOpen={onOpen} user={session?.user} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
+      <div className="p-4 md:ml-60">
         {children}
-      </Box>
+      </div>
     </div>
   );
 }

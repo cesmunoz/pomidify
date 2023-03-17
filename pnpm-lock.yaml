@@ -18,9 +18,11 @@ importers:
       '@chakra-ui/react': ^1.8.6
       '@emotion/react': ^11
       '@emotion/styled': ^11
+      '@heroicons/react': ^2.0.16
       '@types/node': ^17.0.12
       '@types/react': 17.0.37
       autoprefixer: ^10.4.14
+      classnames: ^2.3.2
       config: workspace:*
       eslint: 7.32.0
       framer-motion: ^6.2.8
@@ -41,6 +43,8 @@ importers:
       '@chakra-ui/react': 1.8.9_uiy7mwm45lvi67tcgouazyjsty
       '@emotion/react': 11.10.6_z7w6vgz62d5pbxpnoxayoqdmly
       '@emotion/styled': 11.10.6_tcehzkv6md3u35dlbrrqy7owym
+      '@heroicons/react': 2.0.16_react@17.0.2
+      classnames: 2.3.2
       framer-motion: 6.5.1_sfoxds7t5ydpegc3knd667wn6m
       next: 12.0.8_sfoxds7t5ydpegc3knd667wn6m
       next-auth: 4.20.1_ej7h7ng32kaymulsbg6gl4bggu
@@ -85,15 +89,21 @@ importers:
     specifiers:
       '@types/react': ^17.0.37
       '@types/react-dom': ^17.0.11
+      class-variance-authority: ^0.4.0
+      classnames: ^2.3.2
       config: workspace:*
       postcss: ^8.4.21
       react-icons: ^4.3.1
       tailwind-config: workspace:*
+      tailwind-merge: ^1.10.0
       tsconfig: workspace:*
       tsup: ^6.6.3
       typescript: ^4.9.5
     dependencies:
+      class-variance-authority: 0.4.0_typescript@4.9.5
+      classnames: 2.3.2
       react-icons: 4.8.0
+      tailwind-merge: 1.10.0
     devDependencies:
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.19
@@ -1315,6 +1325,14 @@ packages:
       - supports-color
     dev: true
 
+  /@heroicons/react/2.0.16_react@17.0.2:
+    resolution: {integrity: sha512-x89rFxH3SRdYaA+JCXwfe+RkE1SFTo9GcOkZettHer71Y3T7V+ogKmfw5CjTazgS3d0ClJ7p1NA+SP7VQLQcLw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 17.0.2
+    dev: false
+
   /@humanwhocodes/config-array/0.5.0:
     resolution: {integrity: sha512-FagtKFz74XrTl7y6HCzQpwDfXP0yhxe9lHLD1UZxjvZIcbyRz8zTFF/yYNfSfzU414eDwZ1SrO0Qvtyf+wFMQg==}
     engines: {node: '>=10.10.0'}
@@ -1990,6 +2008,21 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /class-variance-authority/0.4.0_typescript@4.9.5:
+    resolution: {integrity: sha512-74enNN8O9ZNieycac/y8FxqgyzZhZbxmCitAtAeUrLPlxjSd5zA7LfpprmxEcOmQBnaGs5hYhiSGnJ0mqrtBLQ==}
+    peerDependencies:
+      typescript: '>= 4.5.5 < 5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.9.5
+    dev: false
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
 
   /color-convert/1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -4375,6 +4408,10 @@ packages:
       strip-ansi: 6.0.1
     dev: true
 
+  /tailwind-merge/1.10.0:
+    resolution: {integrity: sha512-WFnDXSS4kFTZwjKg5/oZSGzBRU/l+qcbv5NVTzLUQvJ9yovDAP05h0F2+ZFW0Lw9EcgRoc2AfURUdZvnEFrXKg==}
+    dev: false
+
   /tailwindcss/3.2.7:
     resolution: {integrity: sha512-B6DLqJzc21x7wntlH/GsZwEXTBttVSl1FtCzC8WP4oBc/NKef7kaax5jeihkkCEWc831/5NDJ9gRNDK6NEioQQ==}
     engines: {node: '>=12.13.0'}
@@ -4642,7 +4679,6 @@ packages:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

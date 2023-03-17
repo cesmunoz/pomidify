@@ -13,6 +13,8 @@
     "@chakra-ui/react": "^1.8.6",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@heroicons/react": "^2.0.16",
+    "classnames": "^2.3.2",
     "framer-motion": "^6.2.8",
     "next": "12.0.8",
     "next-auth": "^4.3.0",
@@ -30,9 +32,9 @@
     "config": "workspace:*",
     "eslint": "7.32.0",
     "postcss": "^8.4.21",
+    "tailwind-config": "workspace:*",
     "tailwindcss": "^3.2.7",
     "tsconfig": "workspace:*",
-    "typescript": "^4.5.3",
-    "tailwind-config": "workspace:*"
+    "typescript": "^4.5.3"
   }
 }
