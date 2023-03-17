@@ -25,13 +25,13 @@
   "devDependencies": {
     "@types/node": "^17.0.12",
     "@types/react": "17.0.37",
-    "autoprefixer": "^10.4.3",
+    "autoprefixer": "^10.4.14",
     "config": "workspace:*",
     "eslint": "7.32.0",
     "next-transpile-modules": "9.0.0",
-    "postcss": "^8.4.11",
-    "tailwindcss": "^3.0.23",
-    "tsconfig":"workspace:*",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7",
+    "tsconfig": "workspace:*",
     "typescript": "^4.5.3"
   }
 }
