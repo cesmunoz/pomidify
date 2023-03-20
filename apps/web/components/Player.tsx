@@ -150,17 +150,6 @@ export const Player = () => {
           </Flex>
         </div>
       </div>
-      <div className="w-full flex flex-col mt-2">
-        <Typography className="text-lg">Next Songs:</Typography>
-        <ul>
-          {spotifyPlayerState?.nextTracks.map((nextTrack) => (
-            <ListItem key={nextTrack.id}>
-              <ListIcon as={FiMusic} color="pink.600" />
-              {nextTrack.name} ({nextTrack.artists[0].name})
-            </ListItem>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 };

@@ -6,6 +6,9 @@
   "devDependencies": {
     "tailwindcss": "^3.2.7"
   },
+  "dependencies": {
+    "daisyui": "^2.6.0"
+  },
   "scripts": {
     "clean": "rm -rf node_modules .turbo"
   }

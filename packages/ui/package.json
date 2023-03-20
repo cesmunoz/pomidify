@@ -34,6 +34,8 @@
   "dependencies": {
     "class-variance-authority": "^0.4.0",
     "classnames": "^2.3.2",
+    "daisyui": "^2.6.0",
+    "next": "12.0.8",
     "react-icons": "^4.3.1",
     "tailwind-merge": "^1.10.0"
   }

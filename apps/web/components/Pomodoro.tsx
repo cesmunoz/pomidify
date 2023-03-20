@@ -49,9 +49,10 @@ export const Pomodoro = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col gap-4 items-center">
       <div className="flex gap-4 items-center">
         <Button
+          className="w-32"
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.POMODORO)}
           intent={
@@ -61,6 +62,7 @@ export const Pomodoro = () => {
           Pomodoro
         </Button>
         <Button
+          className="w-32"
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.SHORT_BREAK)}
           intent={
@@ -70,6 +72,7 @@ export const Pomodoro = () => {
           Short Break
         </Button>
         <Button
+          className="w-32"
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.LONG_BREAK)}
           intent={
