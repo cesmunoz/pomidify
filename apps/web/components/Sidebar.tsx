@@ -17,6 +17,7 @@ import {
   FiTrendingUp,
 } from "react-icons/fi";
 import { NavItem } from "ui";
+import { Button } from "ui";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;

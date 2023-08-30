@@ -1,5 +1,5 @@
 {
   "extends": "tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../../packages/ui/src/NavItem.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../../packages/ui/src/NavItem.tsx", "../../packages/ui/src/components/ui/theme-menu.tsx"],
   "exclude": ["node_modules"]
 }
