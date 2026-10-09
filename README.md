@@ -1,5 +1,7 @@
 # Turborepo starter
 
+**Pomidify** is a productivity app that combines a Pomodoro timer, Spotify integration, and a todo list — helping you stay focused while enjoying your favorite music.
+
 This is an official Yarn v1 starter turborepo.
 
 ## What's inside?
