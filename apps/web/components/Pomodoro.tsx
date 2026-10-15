@@ -56,7 +56,9 @@ export const Pomodoro = () => {
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.POMODORO)}
           intent={
-            pomodoroTimerSelected !== POMODORO_TIMER.POMODORO && "secondary"
+            pomodoroTimerSelected === POMODORO_TIMER.POMODORO
+              ? "primary"
+              : "secondary"
           }
         >
           Pomodoro
@@ -66,7 +68,9 @@ export const Pomodoro = () => {
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.SHORT_BREAK)}
           intent={
-            pomodoroTimerSelected !== POMODORO_TIMER.SHORT_BREAK && "secondary"
+            pomodoroTimerSelected === POMODORO_TIMER.SHORT_BREAK
+              ? "primary"
+              : "secondary"
           }
         >
           Short Break
@@ -76,7 +80,9 @@ export const Pomodoro = () => {
           size="sm"
           onClick={() => handleTimer(POMODORO_TIMER.LONG_BREAK)}
           intent={
-            pomodoroTimerSelected !== POMODORO_TIMER.LONG_BREAK && "secondary"
+            pomodoroTimerSelected === POMODORO_TIMER.LONG_BREAK
+              ? "primary"
+              : "secondary"
           }
         >
           Long Break
