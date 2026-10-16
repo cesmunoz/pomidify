@@ -1,0 +1,137 @@
+diff --git a/dist/react-beautiful-dnd.cjs.js b/dist/react-beautiful-dnd.cjs.js
+index 12884e9a1852d87728db55201156e2accc0e5749..82be349f0e35edcfc5cbabf75b5b7774835ed8ba 100644
+--- a/dist/react-beautiful-dnd.cjs.js
++++ b/dist/react-beautiful-dnd.cjs.js
+@@ -8242,7 +8242,17 @@ function PublicDraggable(props) {
+   }));
+ }
+ 
+-function Droppable(props) {
++function Droppable(passedProps) {
++  var props = Object.assign({
++    mode: 'standard',
++    type: 'DEFAULT',
++    direction: 'vertical',
++    isDropDisabled: false,
++    isCombineEnabled: false,
++    ignoreContainerClipping: false,
++    renderClone: null,
++    getContainerForClone: getBody
++  }, passedProps);
+   var appContext = React.useContext(AppContext);
+   !appContext ? process.env.NODE_ENV !== "production" ? invariant(false, 'Could not find app context') : invariant(false) : void 0;
+   var contextId = appContext.contextId,
+@@ -8501,22 +8511,11 @@ function getBody() {
+   return document.body;
+ }
+ 
+-var defaultProps = {
+-  mode: 'standard',
+-  type: 'DEFAULT',
+-  direction: 'vertical',
+-  isDropDisabled: false,
+-  isCombineEnabled: false,
+-  ignoreContainerClipping: false,
+-  renderClone: null,
+-  getContainerForClone: getBody
+-};
+ var ConnectedDroppable = reactRedux.connect(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+   context: StoreContext,
+   pure: true,
+   areStatePropsEqual: isStrictEqual
+ })(Droppable);
+-ConnectedDroppable.defaultProps = defaultProps;
+ 
+ exports.DragDropContext = DragDropContext;
+ exports.Draggable = PublicDraggable;
+diff --git a/dist/react-beautiful-dnd.esm.js b/dist/react-beautiful-dnd.esm.js
+index ecced698aefb8b8e97a196195ef77955941e0b72..c1876c743dca9c799211462d7a2f48ada61231be 100644
+--- a/dist/react-beautiful-dnd.esm.js
++++ b/dist/react-beautiful-dnd.esm.js
+@@ -8235,7 +8235,17 @@ function PublicDraggable(props) {
+   }));
+ }
+ 
+-function Droppable(props) {
++function Droppable(passedProps) {
++  var props = Object.assign({
++    mode: 'standard',
++    type: 'DEFAULT',
++    direction: 'vertical',
++    isDropDisabled: false,
++    isCombineEnabled: false,
++    ignoreContainerClipping: false,
++    renderClone: null,
++    getContainerForClone: getBody
++  }, passedProps);
+   var appContext = useContext(AppContext);
+   !appContext ? process.env.NODE_ENV !== "production" ? invariant(false, 'Could not find app context') : invariant(false) : void 0;
+   var contextId = appContext.contextId,
+@@ -8494,21 +8504,10 @@ function getBody() {
+   return document.body;
+ }
+ 
+-var defaultProps = {
+-  mode: 'standard',
+-  type: 'DEFAULT',
+-  direction: 'vertical',
+-  isDropDisabled: false,
+-  isCombineEnabled: false,
+-  ignoreContainerClipping: false,
+-  renderClone: null,
+-  getContainerForClone: getBody
+-};
+ var ConnectedDroppable = connect(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+   context: StoreContext,
+   pure: true,
+   areStatePropsEqual: isStrictEqual
+ })(Droppable);
+-ConnectedDroppable.defaultProps = defaultProps;
+ 
+ export { DragDropContext, PublicDraggable as Draggable, ConnectedDroppable as Droppable, resetServerContext, useKeyboardSensor, useMouseSensor, useTouchSensor };
+diff --git a/dist/react-beautiful-dnd.js b/dist/react-beautiful-dnd.js
+index 84b63e9621506a8a19809816134b15f25686846c..86a9e198b0b3ee4160e3e39c4b32240561f64803 100644
+--- a/dist/react-beautiful-dnd.js
++++ b/dist/react-beautiful-dnd.js
+@@ -11236,7 +11236,17 @@
+     }));
+   }
+ 
+-  function Droppable(props) {
++  function Droppable(passedProps) {
++    var props = Object.assign({
++      mode: 'standard',
++      type: 'DEFAULT',
++      direction: 'vertical',
++      isDropDisabled: false,
++      isCombineEnabled: false,
++      ignoreContainerClipping: false,
++      renderClone: null,
++      getContainerForClone: getBody
++    }, passedProps);
+     var appContext = React.useContext(AppContext);
+     !appContext ?  invariant(false, 'Could not find app context')  : void 0;
+     var contextId = appContext.contextId,
+@@ -11495,22 +11505,11 @@
+     return document.body;
+   }
+ 
+-  var defaultProps = {
+-    mode: 'standard',
+-    type: 'DEFAULT',
+-    direction: 'vertical',
+-    isDropDisabled: false,
+-    isCombineEnabled: false,
+-    ignoreContainerClipping: false,
+-    renderClone: null,
+-    getContainerForClone: getBody
+-  };
+   var ConnectedDroppable = connect(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+     context: StoreContext,
+     pure: true,
+     areStatePropsEqual: isStrictEqual
+   })(Droppable);
+-  ConnectedDroppable.defaultProps = defaultProps;
+ 
+   exports.DragDropContext = DragDropContext;
+   exports.Draggable = PublicDraggable;

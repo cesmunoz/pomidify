@@ -1,11 +1,3 @@
-import {
-  Box,
-  BoxProps,
-  CloseButton,
-  Flex,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
 import Link from "next/link";
 import { IconType } from "react-icons";
 import {
@@ -16,10 +8,11 @@ import {
   FiStar,
   FiTrendingUp,
 } from "react-icons/fi";
-import { NavItem } from "ui";
+import { cn, NavItem } from "ui";
 
-interface SidebarProps extends BoxProps {
+interface SidebarProps {
   onClose: () => void;
+  className?: string;
 }
 
 interface LinkItemProps {
@@ -37,31 +30,39 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Settings", icon: FiSettings, href: "/settings" },
 ];
 
-export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+export const SidebarContent = ({ onClose, className }: SidebarProps) => {
   return (
-    <Box
-      transition="3s ease"
-      bg={useColorModeValue("white", "gray.900")}
-      borderRight="1px"
-      borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
-      pos="fixed"
-      h="full"
-      {...rest}
+    <aside
+      className={cn(
+        "z-40 h-full w-full flex-col border-r border-gray-200 bg-white md:fixed md:inset-y-0 md:left-0 md:w-60",
+        className
+      )}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Pomidify
-        </Text>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
-      </Flex>
-      <div className="flex flex-col gap-2 ml-7">
+      <div className="mx-8 flex h-20 items-center justify-between">
+        <span className="font-mono text-2xl font-bold">Pomidify</span>
+        <button
+          type="button"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md md:hidden"
+          aria-label="Close"
+          onClick={onClose}
+        >
+          <span aria-hidden="true" className="text-xl leading-none">
+            ×
+          </span>
+        </button>
+      </div>
+      <div className="ml-7 flex flex-col gap-2">
         {LinkItems.map((link) => (
-          <Link key={link.name} href={link.href} passHref>
+          <Link
+            key={link.name}
+            href={link.href}
+            className="group rounded-md py-1"
+            onClick={onClose}
+          >
             <NavItem Icon={link.icon}>{link.name}</NavItem>
           </Link>
         ))}
       </div>
-    </Box>
+    </aside>
   );
 };
