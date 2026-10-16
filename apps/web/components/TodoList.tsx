@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Box, Button, Flex, IconButton, Text, VStack } from "@chakra-ui/react";
 import { FiCheck, FiPause, FiPlay, FiTrash2 } from "react-icons/fi";
 
 const getItems = (count, prefix) =>
@@ -57,38 +56,42 @@ const ListItem = ({
 }) => {
   return (
     <Draggable draggableId={item.id} index={index}>
-      {(provided, snapshot) => {
+      {(provided) => {
         return (
-          <VStack
+          <div
             ref={provided.innerRef}
-            snapshot={snapshot}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            backgroundColor="pink.500"
-            padding={5}
-            my={2}
-            borderRadius="lg">
-            <Text textColor="white" fontSize="sm" fontWeight="bold">
-              {item.content}
-            </Text>
-            <Flex gap={1}>
-              <IconButton
+            className="my-2 flex flex-col items-center gap-1 rounded-lg bg-pink-500 p-5"
+          >
+            <span className="text-sm font-bold text-white">{item.content}</span>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                className="inline-flex h-8 items-center justify-center rounded-md bg-white px-2"
                 aria-label="Run Task"
-                icon={prefix === "todo" ? <FiPlay /> : <FiPause />}
                 onClick={onToggleRun}
-              />
-              <IconButton
+              >
+                {prefix === "todo" ? <FiPlay /> : <FiPause />}
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-8 items-center justify-center rounded-md bg-white px-2"
                 aria-label="Complete Task"
-                icon={<FiCheck />}
                 onClick={onComplete}
-              />
-              <IconButton
+              >
+                <FiCheck />
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-8 items-center justify-center rounded-md bg-white px-2"
                 aria-label="Search database"
-                icon={<FiTrash2 />}
                 onClick={onRemove}
-              />
-            </Flex>
-          </VStack>
+              >
+                <FiTrash2 />
+              </button>
+            </div>
+          </div>
         );
       }}
     </Draggable>
@@ -103,10 +106,8 @@ const DraggableElement = ({
   onComplete,
   onRemove,
 }) => (
-  <Box m={10}>
-    <Text fontSize="2xl" color="pink.600">
-      {name}
-    </Text>
+  <div className="m-10">
+    <p className="text-2xl text-pink-600">{name}</p>
     <Droppable droppableId={`${prefix}`}>
       {(provided) => (
         <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -125,13 +126,15 @@ const DraggableElement = ({
         </div>
       )}
     </Droppable>
-  </Box>
+  </div>
 );
 
 export const TodoList = () => {
   const [elements, setElements] = React.useState(generateLists());
 
   useEffect(() => {
+    // The demo board reshuffles once on mount. This predates the React 19 hooks rule.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setElements(generateLists());
   }, []);
 
@@ -184,7 +187,7 @@ export const TodoList = () => {
     <div style={{ display: "flex" }}>
       <div>
         <DragDropContext onDragEnd={onDragEnd}>
-          <Flex margin={5}>
+          <div className="m-5 flex">
             {lists.map((listKey) => (
               <DraggableElement
                 elements={elements[listKey.key]}
@@ -196,7 +199,7 @@ export const TodoList = () => {
                 onToggleRun={handleToggleTask}
               />
             ))}
-          </Flex>
+          </div>
         </DragDropContext>
       </div>
     </div>

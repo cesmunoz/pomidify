@@ -1,0 +1,172 @@
+diff --git a/dist/react-beautiful-dnd.cjs.js b/dist/react-beautiful-dnd.cjs.js
+index 12884e9a1852d87728db55201156e2accc0e5749..9291bd59f09b261b9f41c833f5595579073c3506 100644
+--- a/dist/react-beautiful-dnd.cjs.js
++++ b/dist/react-beautiful-dnd.cjs.js
+@@ -8501,26 +8501,42 @@ function getBody() {
+   return document.body;
+ }
+ 
+-var defaultProps = {
+-  mode: 'standard',
+-  type: 'DEFAULT',
+-  direction: 'vertical',
+-  isDropDisabled: false,
+-  isCombineEnabled: false,
+-  ignoreContainerClipping: false,
+-  renderClone: null,
+-  getContainerForClone: getBody
+-};
+ var ConnectedDroppable = reactRedux.connect(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+   context: StoreContext,
+   pure: true,
+   areStatePropsEqual: isStrictEqual
+ })(Droppable);
+-ConnectedDroppable.defaultProps = defaultProps;
++
++function applyDroppableDefaults(passedProps) {
++  var props = {
++    mode: 'standard',
++    type: 'DEFAULT',
++    direction: 'vertical',
++    isDropDisabled: false,
++    isCombineEnabled: false,
++    ignoreContainerClipping: false,
++    renderClone: null,
++    getContainerForClone: getBody
++  };
++
++  if (passedProps) {
++    for (var key in passedProps) {
++      if (Object.prototype.hasOwnProperty.call(passedProps, key) && passedProps[key] !== undefined) {
++        props[key] = passedProps[key];
++      }
++    }
++  }
++
++  return props;
++}
++
++function PublicDroppable(passedProps) {
++  return React.createElement(ConnectedDroppable, applyDroppableDefaults(passedProps));
++}
+ 
+ exports.DragDropContext = DragDropContext;
+ exports.Draggable = PublicDraggable;
+-exports.Droppable = ConnectedDroppable;
++exports.Droppable = PublicDroppable;
+ exports.resetServerContext = resetServerContext;
+ exports.useKeyboardSensor = useKeyboardSensor;
+ exports.useMouseSensor = useMouseSensor;
+diff --git a/dist/react-beautiful-dnd.esm.js b/dist/react-beautiful-dnd.esm.js
+index ecced698aefb8b8e97a196195ef77955941e0b72..ac2435056c4a8df07010e1fb67f07e362ae1c443 100644
+--- a/dist/react-beautiful-dnd.esm.js
++++ b/dist/react-beautiful-dnd.esm.js
+@@ -8494,21 +8494,37 @@ function getBody() {
+   return document.body;
+ }
+ 
+-var defaultProps = {
+-  mode: 'standard',
+-  type: 'DEFAULT',
+-  direction: 'vertical',
+-  isDropDisabled: false,
+-  isCombineEnabled: false,
+-  ignoreContainerClipping: false,
+-  renderClone: null,
+-  getContainerForClone: getBody
+-};
+ var ConnectedDroppable = connect(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+   context: StoreContext,
+   pure: true,
+   areStatePropsEqual: isStrictEqual
+ })(Droppable);
+-ConnectedDroppable.defaultProps = defaultProps;
+ 
+-export { DragDropContext, PublicDraggable as Draggable, ConnectedDroppable as Droppable, resetServerContext, useKeyboardSensor, useMouseSensor, useTouchSensor };
++function applyDroppableDefaults(passedProps) {
++  var props = {
++    mode: 'standard',
++    type: 'DEFAULT',
++    direction: 'vertical',
++    isDropDisabled: false,
++    isCombineEnabled: false,
++    ignoreContainerClipping: false,
++    renderClone: null,
++    getContainerForClone: getBody
++  };
++
++  if (passedProps) {
++    for (var key in passedProps) {
++      if (Object.prototype.hasOwnProperty.call(passedProps, key) && passedProps[key] !== undefined) {
++        props[key] = passedProps[key];
++      }
++    }
++  }
++
++  return props;
++}
++
++function PublicDroppable(passedProps) {
++  return React.createElement(ConnectedDroppable, applyDroppableDefaults(passedProps));
++}
++
++export { DragDropContext, PublicDraggable as Draggable, PublicDroppable as Droppable, resetServerContext, useKeyboardSensor, useMouseSensor, useTouchSensor };
+diff --git a/dist/react-beautiful-dnd.js b/dist/react-beautiful-dnd.js
+index 84b63e9621506a8a19809816134b15f25686846c..a2adbb18dec76278d515a476e06fdab7f4614363 100644
+--- a/dist/react-beautiful-dnd.js
++++ b/dist/react-beautiful-dnd.js
+@@ -11495,26 +11495,42 @@
+     return document.body;
+   }
+ 
+-  var defaultProps = {
+-    mode: 'standard',
+-    type: 'DEFAULT',
+-    direction: 'vertical',
+-    isDropDisabled: false,
+-    isCombineEnabled: false,
+-    ignoreContainerClipping: false,
+-    renderClone: null,
+-    getContainerForClone: getBody
+-  };
+   var ConnectedDroppable = connect(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+     context: StoreContext,
+     pure: true,
+     areStatePropsEqual: isStrictEqual
+   })(Droppable);
+-  ConnectedDroppable.defaultProps = defaultProps;
++
++  function applyDroppableDefaults(passedProps) {
++    var props = {
++      mode: 'standard',
++      type: 'DEFAULT',
++      direction: 'vertical',
++      isDropDisabled: false,
++      isCombineEnabled: false,
++      ignoreContainerClipping: false,
++      renderClone: null,
++      getContainerForClone: getBody
++    };
++
++    if (passedProps) {
++      for (var key in passedProps) {
++        if (Object.prototype.hasOwnProperty.call(passedProps, key) && passedProps[key] !== undefined) {
++          props[key] = passedProps[key];
++        }
++      }
++    }
++
++    return props;
++  }
++
++  function PublicDroppable(passedProps) {
++    return React.createElement(ConnectedDroppable, applyDroppableDefaults(passedProps));
++  }
+ 
+   exports.DragDropContext = DragDropContext;
+   exports.Draggable = PublicDraggable;
+-  exports.Droppable = ConnectedDroppable;
++  exports.Droppable = PublicDroppable;
+   exports.resetServerContext = resetServerContext;
+   exports.useKeyboardSensor = useKeyboardSensor;
+   exports.useMouseSensor = useMouseSensor;

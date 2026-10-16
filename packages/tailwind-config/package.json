@@ -1,13 +1,11 @@
 {
   "name": "tailwind-config",
   "version": "0.0.0",
-  "main": "index.js",
+  "main": "postcss.config.js",
   "private": true,
   "devDependencies": {
-    "tailwindcss": "^3.2.7"
-  },
-  "dependencies": {
-    "daisyui": "^2.6.0"
+    "@tailwindcss/postcss": "4.3.3",
+    "tailwindcss": "4.3.3"
   },
   "scripts": {
     "clean": "rm -rf node_modules .turbo"

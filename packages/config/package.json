@@ -1,7 +1,7 @@
 {
   "name": "config",
   "version": "0.0.0",
-  "main": "index.js",
+  "main": "eslint-preset.js",
   "license": "MIT",
   "files": [
     "eslint-preset.js"
@@ -10,8 +10,7 @@
     "clean": "rm -rf node_modules .turbo"
   },
   "dependencies": {
-    "eslint-config-next": "^12.0.8",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react": "7.28.0"
+    "eslint-config-next": "16.4.2",
+    "eslint-config-prettier": "10.1.8"
   }
 }

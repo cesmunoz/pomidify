@@ -1,16 +1,10 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import {
-  Box,
-  useColorModeValue,
-  Drawer,
-  DrawerContent,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { SidebarContent } from "./Sidebar";
 import { MobileNav } from "./MobileNav";
 import { useSession } from "next-auth/react";
 import { useAppContext } from "../context/app";
 import { POMODORO_STATUS, POMODORO_TIMER } from "../enums";
+import { Sheet, SheetContent } from "ui";
 
 // TODO should be on types folder
 declare global {
@@ -41,6 +35,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
   // TODO check to stop the music globally
   const [currentSongId, setCurrentSongId] = useState<string>("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (pomodoroTimer <= 0) {
@@ -152,27 +147,18 @@ export function Layout({ children }: { children: ReactNode }) {
     updateSpotifyPlayerState,
   ]);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <div className="container">
+    <div className="min-h-screen">
       <SidebarContent
-        onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
+        className="hidden md:flex"
+        onClose={() => setSidebarOpen(false)}
       />
-      <Drawer
-        autoFocus={false}
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size="full"
-      >
-        <DrawerContent>
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
-      <MobileNav onOpen={onOpen} user={session?.user} />
+      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <SheetContent side="left" className="p-0">
+          <SidebarContent onClose={() => setSidebarOpen(false)} />
+        </SheetContent>
+      </Sheet>
+      <MobileNav onOpen={() => setSidebarOpen(true)} user={session?.user} />
       <div className="p-4 md:ml-60">{children}</div>
     </div>
   );
