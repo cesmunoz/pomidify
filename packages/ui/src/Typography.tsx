@@ -1,5 +1,5 @@
-import { cva, VariantProps } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "./cn";
 
 const typographyStyles = cva("font-sans text-black", {
   variants: {
@@ -27,15 +27,7 @@ export const Typography = ({
   children,
   ...rest
 }: TypographyProps) => (
-  <div
-    className={twMerge(
-      typographyStyles({
-        intent,
-        className,
-      })
-    )}
-    {...rest}
-  >
+  <div className={cn(typographyStyles({ intent, className }))} {...rest}>
     {children}
   </div>
 );

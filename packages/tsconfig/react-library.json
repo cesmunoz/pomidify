@@ -3,8 +3,9 @@
   "display": "React Library",
   "extends": "./base.json",
   "compilerOptions": {
-    "lib": ["ES2015"],
+    "lib": ["DOM", "DOM.Iterable", "ES2015"],
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "ES6",
     "jsx": "react-jsx"
   }

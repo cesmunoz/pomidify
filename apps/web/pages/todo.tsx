@@ -1,17 +1,8 @@
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Input,
-  VStack,
-  Text,
-  IconButton,
-} from "@chakra-ui/react";
+import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FiCheck, FiPause, FiPlay, FiTrash2 } from "react-icons/fi";
 import { v4 as uuidv4 } from "uuid";
+import { Button, Input } from "ui";
 import { useAppContext } from "../context/app";
 
 const removeFromList = (list, index) => {
@@ -79,41 +70,44 @@ const ListItem = ({
 }) => {
   return (
     <Draggable draggableId={item.id} index={index}>
-      {(provided, snapshot) => {
+      {(provided) => {
         return (
-          <VStack
+          <div
             ref={provided.innerRef}
-            snapshot={snapshot}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            backgroundColor="pink.500"
-            padding={5}
-            borderRadius="lg"
+            className="flex flex-col items-center gap-1 rounded-lg bg-pink-500 p-5"
           >
-            <Text textColor="white" fontSize="sm" fontWeight="bold">
+            <span className="text-sm font-bold text-white">
               {getShortDescription(item.title)}
-            </Text>
-            <Flex gap={1}>
-              <IconButton
-                height={6}
+            </span>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                className="inline-flex h-6 items-center justify-center rounded-md bg-white px-2"
                 aria-label="Run Task"
-                icon={prefix === "todo" ? <FiPlay /> : <FiPause />}
                 onClick={onToggleRun}
-              />
-              <IconButton
-                height={6}
+              >
+                {prefix === "todo" ? <FiPlay /> : <FiPause />}
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-6 items-center justify-center rounded-md bg-white px-2"
                 aria-label="Complete Task"
-                icon={<FiCheck />}
                 onClick={onComplete}
-              />
-              <IconButton
-                height={6}
+              >
+                <FiCheck />
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-6 items-center justify-center rounded-md bg-white px-2"
                 aria-label="Search database"
-                icon={<FiTrash2 />}
                 onClick={onRemove}
-              />
-            </Flex>
-          </VStack>
+              >
+                <FiTrash2 />
+              </button>
+            </div>
+          </div>
         );
       }}
     </Draggable>
@@ -136,14 +130,16 @@ const DraggableElement = ({
   onComplete,
   onRemove,
 }) => (
-  <Box p={2} flexGrow={1}>
-    <Text fontSize="2xl" color="pink.600" width={125}>
-      {name}
-    </Text>
-    <Box w="100%" height={100} backgroundColor="pink.100">
+  <div className="flex-1 p-2">
+    <p className="w-[125px] text-2xl text-pink-600">{name}</p>
+    <div className="h-auto min-h-[100px] w-full bg-pink-100">
       <Droppable droppableId={`${prefix}`}>
         {(provided) => (
-          <VStack {...provided.droppableProps} ref={provided.innerRef} gap={2}>
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            className="flex flex-col gap-2"
+          >
             {elements.map((item, index) => (
               <ListItem
                 key={item.id}
@@ -156,11 +152,11 @@ const DraggableElement = ({
               />
             ))}
             {provided.placeholder}
-          </VStack>
+          </div>
         )}
       </Droppable>
-    </Box>
-  </Box>
+    </div>
+  </div>
 );
 
 export default function Todo() {
@@ -203,8 +199,6 @@ export default function Todo() {
   };
 
   const handleComplete = (item, index, status) => {
-    // const list = moveItem(elements, status, index, "done", index);
-    // setElements(list);
     console.log("Call completed", item);
     setTodoItemCompleted(item.id);
   };
@@ -224,35 +218,33 @@ export default function Todo() {
   };
 
   return (
-    <VStack>
-      <HStack>
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-2">
         <Input
           placeholder="Describe your task"
           name="task"
           id="task"
           onChange={handleTaskOnChange}
         />
-        <Button colorScheme="pink" onClick={handleAddTodo}>
+        <Button className="shrink-0" onClick={handleAddTodo}>
           Add Task
         </Button>
-      </HStack>
-      <HStack w="100%">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Flex w="100%">
-            {lists.map((listKey) => (
-              <DraggableElement
-                elements={elements[listKey.key]}
-                key={listKey.key}
-                prefix={listKey.key}
-                name={listKey.name}
-                onComplete={handleComplete}
-                onRemove={handleRemoveTask}
-                onToggleRun={handleToggleTask}
-              />
-            ))}
-          </Flex>
-        </DragDropContext>
-      </HStack>
-    </VStack>
+      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex w-full">
+          {lists.map((listKey) => (
+            <DraggableElement
+              elements={elements[listKey.key]}
+              key={listKey.key}
+              prefix={listKey.key}
+              name={listKey.name}
+              onComplete={handleComplete}
+              onRemove={handleRemoveTask}
+              onToggleRun={handleToggleTask}
+            />
+          ))}
+        </div>
+      </DragDropContext>
+    </div>
   );
 }

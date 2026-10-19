@@ -1,19 +1,11 @@
-import {
-  SimpleGrid,
-  Stack,
-  Image,
-  Box,
-  WrapItem,
-  Wrap,
-  Text,
-  Badge,
-} from "@chakra-ui/react";
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
+import { Badge } from "ui";
 import { useAppContext } from "../context/app";
 
 export default function Spotify() {
   const { spotifySelectedPlaylist, setSpotifyPlaylist } = useAppContext();
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState<any[]>([]);
 
   useEffect(() => {
     async function getUserPlaylists() {
@@ -33,48 +25,38 @@ export default function Spotify() {
   };
 
   return (
-    <SimpleGrid>
-      <Stack direction="row">
-        <Wrap>
-          {playlists.map((item) => (
-            <WrapItem key={item.id}>
-              <Box
-                maxW="sm"
-                borderWidth="1px"
-                borderRadius="lg"
-                overflow="hidden"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                p="5"
-                cursor="pointer"
-                bg={spotifySelectedPlaylist?.id === item.id ? "pink.600" : null}
-                onClick={() => handleClick(item)}
-              >
-                <Text
-                  fontSize="md"
-                  fontFamily="monospace"
-                  fontWeight="bold"
-                  color={spotifySelectedPlaylist?.id === item.id ? "white" : "black"}
-                >
-                  {item.name}
-                </Text>
-                <Image
-                  boxSize="200px"
-                  w="400"
-                  src={item.images[0]?.url}
-                  alt={item.name}
-                />
-                {spotifySelectedPlaylist?.id === item.id && (
-                  <Badge m="2" colorScheme="green">
-                    SELECTED
-                  </Badge>
-                )}
-              </Box>
-            </WrapItem>
-          ))}
-        </Wrap>
-      </Stack>
-    </SimpleGrid>
+    <div className="flex flex-wrap gap-4">
+      {playlists.map((item) => {
+        const selected = spotifySelectedPlaylist?.id === item.id;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            className={`flex max-w-sm flex-col items-center overflow-hidden rounded-lg border p-5 ${
+              selected ? "bg-pink-600" : "bg-white"
+            }`}
+            onClick={() => handleClick(item)}
+          >
+            <span
+              className={`font-mono text-base font-bold ${
+                selected ? "text-white" : "text-black"
+              }`}
+            >
+              {item.name}
+            </span>
+            <img
+              className="h-[200px] w-[400px] object-cover"
+              src={item.images[0]?.url}
+              alt={item.name}
+            />
+            {selected && (
+              <Badge className="m-2" variant="default">
+                SELECTED
+              </Badge>
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }

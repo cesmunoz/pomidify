@@ -1,32 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 import {
-  Box,
-  VStack,
-  HStack,
-  Icon,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-  Flex,
-  Spacer,
-  List,
-  ListItem,
-  ListIcon,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import {
+  FiRepeat,
   FiShuffle,
   FiSkipBack,
   FiSkipForward,
-  FiRepeat,
-  FiMusic,
 } from "react-icons/fi";
 import { PLAYER_REPEAT_STATE } from "../enums";
 import { formatProgressSong } from "../utils";
 import { useAppContext } from "../context/app";
-import { Typography } from "ui";
+import { Slider, Typography } from "ui";
 import cx from "classnames";
 
 export const Player = () => {
@@ -82,16 +64,16 @@ export const Player = () => {
 
   return (
     <div className="w-full">
-      <div className="w-full flex flex-col border border-gray-200 rounded-lg shadow-lg bg-white">
+      <div className="flex w-full flex-col rounded-lg border border-gray-200 bg-white shadow-lg">
         <div className="flex">
-          <div className="px-4 mt-3">
+          <div className="mt-3 px-4">
             <img
-              className="w-14 h-14 rounded-md"
+              className="h-14 w-14 rounded-md"
               src={spotifyPlayerState?.currentTrack?.album?.images[0].url}
               alt={spotifyPlayerState?.currentTrack?.album?.name}
             />
           </div>
-          <div className="flex flex-col pt-2 flex-1 gap-1">
+          <div className="flex flex-1 flex-col gap-1 pt-2">
             <Typography className="text-sm font-semibold">
               {spotifyPlayerState?.currentTrack?.name}
               SONG
@@ -123,23 +105,18 @@ export const Player = () => {
             </div>
           </div>
         </div>
-        <div className="w-full pb-5 px-5">
+        <div className="w-full px-5 pb-5">
           <Slider
             aria-label="slider-ex-2"
-            colorScheme="pink"
-            value={progressPercentage}
-            isReadOnly
-          >
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-          <Flex>
+            value={[Number.isFinite(progressPercentage) ? progressPercentage : 0]}
+            max={100}
+            className="pointer-events-none"
+          />
+          <div className="flex">
             <Typography intent="primary" className="text-sm">
               {formatProgressSong(progressSong)}
             </Typography>
-            <Spacer />
+            <span className="flex-1" />
             <Typography>
               {spotifyPlayerState &&
                 formatProgressSong(
@@ -147,7 +124,7 @@ export const Player = () => {
                   true
                 )}
             </Typography>
-          </Flex>
+          </div>
         </div>
       </div>
     </div>

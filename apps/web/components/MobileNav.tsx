@@ -1,33 +1,26 @@
-import {
-  FlexProps,
-  Flex,
-  useColorModeValue,
-  IconButton,
-  HStack,
-  Menu,
-  MenuButton,
-  Avatar,
-  VStack,
-  Box,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  Text,
-  Icon,
-} from "@chakra-ui/react";
 import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { FiMenu, FiBell, FiChevronDown, FiUser } from "react-icons/fi";
+import { FiBell, FiChevronDown, FiMenu, FiUser } from "react-icons/fi";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "ui";
 import { useAppContext } from "../context/app";
 import { UserSession } from "../types/next-auth";
 import { format } from "../utils";
 
-interface MobileProps extends FlexProps {
+interface MobileProps {
   user?: UserSession;
   onOpen: () => void;
 }
 
-export const MobileNav = ({ user, onOpen, ...rest }: MobileProps) => {
+export const MobileNav = ({ user, onOpen }: MobileProps) => {
   const { pathname } = useRouter();
   const hidePomodoroTimer = pathname === "/pomodoro";
   const { pomodoroTimer } = useAppContext();
@@ -36,99 +29,66 @@ export const MobileNav = ({ user, onOpen, ...rest }: MobileProps) => {
   };
 
   return (
-    <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 4 }}
-      height="20"
-      alignItems="center"
-      bg={useColorModeValue("white", "gray.900")}
-      borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "space-between", md: "flex-end" }}
-      {...rest}
-    >
-      <IconButton
-        display={{ base: "flex", md: "none" }}
+    <header className="flex h-20 items-center justify-between border-b border-gray-200 bg-white px-4 md:ml-60 md:justify-end">
+      <button
+        type="button"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 md:hidden"
         onClick={onOpen}
-        variant="outline"
         aria-label="open menu"
-        icon={<FiMenu />}
-      />
-
-      <Text
-        display={{ base: "flex", md: "none" }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold"
       >
-        Pomidify
-      </Text>
+        <FiMenu />
+      </button>
 
-      <HStack spacing={{ base: "0", md: "6" }}>
+      <span className="font-mono text-2xl font-bold md:hidden">Pomidify</span>
+
+      <div className="flex items-center gap-2 md:gap-6">
         {!hidePomodoroTimer && (
-          <Flex>
-            <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-              {format(pomodoroTimer)}
-            </Text>
-          </Flex>
+          <span className="font-mono text-2xl font-bold">
+            {format(pomodoroTimer)}
+          </span>
         )}
-        <IconButton
-          size="lg"
-          variant="ghost"
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md"
           aria-label="open menu"
-          icon={<FiBell />}
-        />
-        <Flex alignItems={"center"}>
-          <Menu>
-            <MenuButton
-              py={2}
-              transition="all 0.3s"
-              _focus={{ boxShadow: "none" }}
-            >
-              <HStack>
-                {user ? (
-                  <Avatar size={"sm"} src={user.image} />
-                ) : (
-                  <Icon
-                    mr="4"
-                    fontSize="16"
-                    _groupHover={{
-                      color: "white",
-                    }}
-                    as={FiUser}
-                  />
-                )}
-                <VStack
-                  display={{ base: "none", md: "flex" }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2"
-                >
-                  <Text fontSize="sm">{user ? user.name : "Welcome!"}</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    {user ? user.email : "User not logged in"}
-                  </Text>
-                </VStack>
-                <Box display={{ base: "none", md: "flex" }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </MenuButton>
-            <MenuList
-              bg={useColorModeValue("white", "gray.900")}
-              borderColor={useColorModeValue("gray.200", "gray.700")}
-            >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <MenuItem onClick={handleLogin}>
-                {user ? "Sign out" : "Sign in"}
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
-      </HStack>
-    </Flex>
+        >
+          <FiBell />
+        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="rounded-md py-2 outline-none">
+            <span className="flex items-center">
+              {user?.image ? (
+                <Avatar>
+                  <AvatarImage src={user.image} alt={user.name ?? ""} />
+                  <AvatarFallback>
+                    <FiUser />
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <FiUser className="text-base" />
+              )}
+              <span className="ml-2 hidden flex-col items-start md:flex">
+                <span className="text-sm">{user ? user.name : "Welcome!"}</span>
+                <span className="text-xs text-gray-600">
+                  {user ? user.email : "User not logged in"}
+                </span>
+              </span>
+              <span className="ml-1 hidden md:inline-flex">
+                <FiChevronDown />
+              </span>
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogin}>
+              {user ? "Sign out" : "Sign in"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
   );
 };
